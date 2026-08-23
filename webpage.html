@@ -67,13 +67,21 @@
 Predictions serve two goals: addressing practical, applied questions with stakeholders,
 AND advancing scientific understanding of a system by falsifying causal predictions.
 
-There is a philosophical difference between predictions in applied and fundamental science. Only under very specific conditions is prediction science, in particular when it achieves validation of structure. A "context" explanation points to a system defined too narrowly, and may lead eventually to incompressible system descriptions if everything always remains context-dependent. Keep the long-term view of science in mind.
+There is a philosophical difference between predictions in applied and fundamental science. Only under very specific conditions 
+is prediction science, in particular when it achieves validation of structure. A "context" explanation points to a system defined 
+too narrowly, and may lead eventually to incompressible system descriptions if everything always remains context-dependent. 
+Keep the long-term view of science in mind.
 
 The quality of predictions is currently unknown due to lack of uncertainty quantification.
 
 Newcomers may want orientation, this resource provides it.
 
-A model is a flexible thing here: it can be a set of expert statements, a process model, or a deep-learning analysis. A prediction is a quantitative statement of a model, including forecasts and projections.
+Predictions use models, hence quite a bit of this orientation touches on modelling. It does so, somewhat obscurely, in 
+Stage 3[!!LINK] under "Building trust in model"[!!!LINK]. The reason is that in this context the modelling steps primarily serve to justify the 
+choice of the model(s). How to model, and which model to use when is discussed under "Bones of contention"[!!!LINK].
+
+A model is a flexible thing here: it can be a set of expert statements, a process model, or a deep-learning analysis. 
+A prediction is a quantitative statement of a model, including forecasts and projections.
 
 ## PHASES
 
@@ -218,29 +226,73 @@ Coded models should be checked to be working correctly. This is important in mod
 The essential step to do so is by defining test cases, where the correct output of the model component is known; unless the model produces this known output, it is faulty. In advanced software development, unit testing is automatised and carried out after every major modification of code (e.g. for <a target="_blank" href="https://testthat.r-lib.org">R</a>, <a target="_blank" href="https://docs.python.org/3/library/unittest.html">Python</a>, <a target="_blank" href="https://www.geeksforgeeks.org/software-testing/embedded-c-cpp-unit-testing-basics">C++</a>). Unit testing is necessary but not sufficient for code verification; other elements of testing need to be considered as well (<a target="_blank" href="https://en.wikipedia.org/wiki/Software_testing">scalability, maintainability, performance</a>).
 
 --- Is model "rich" enough? #model-rich
-TEXT When prediction is about a real world system, so is the model from which it is derived. Thus, the underlying model must be able to reproduce relevant features and dynamics of that real world system. To do so, its dynamics must be "rich" enough = sufficiently powerful = covering enough of the feature space of the system under consideration.
+TEXT Extreme events are often of particular relevance in environmental predictions, yet they are difficult to predict. One reason is that the statistical 
+noise around a prediction, based on the unexplained variance in the validation data, may follow a distribution with "heavy tails"[!!!LINK wiki]. Such distributions 
+are very difficult to distinguish from those with normal, thin tails, and are thus not typically used when fitting models Examples include the 
+Generalised Extreme Value distribution, Lévy distribution, Zipf-Mandelbrot "law" or log-logistic distribution.[!!!Black Swan ref] As a 
+result, even a perfectly predicted mean would not yield realistic extremes, unless combined with such heavy-tailed error distributions.
 
-For example, typical models of the financial market are unable to produce the kind of bubbles and bursts we witnessed in the 1920 and 2008 <i>from endogenous dynamics</i>. But, as Farmer (2024) argued, the 2008 bubble was mostly internal. So, for such a system we need a feedback-rich complex adaptive system representation, in economics, in biology, in medicine, in environmental science. Only if the model can have peaks of the same order of magnitude as those observed, if response-times are quick (or drawn out) enough, if ranges of patterns can be produced that include the observed, only then is the model likely to be "rich" enough to also include the system under consideration.
+Another reason why extremes are under-predicted is that the models underlying them are not extreme enough in their dynamics. For example, 
+if a positive feedback is omitted, the system will develop too linearly and is not "rich" enough to show radical dynamics. In economics models of too "poor" 
+endogenous dynamics are blamed for the inability of mainstream models to instantiate extreme boom-and-bust phenomena, which the real 
+world regrettable exhibits (Farmer 2024)].
+
+A third reason for lack of extremes in prediction are too moderate drivers, i.e. too weak scenarios. Since these scenarios are generated by models 
+themselves, this is just a version of the previous points applied to scenario-generating models.
+When selecting or developing a model for prediction, it seems a good idea to explore whether it is able to yield at least as extreme predictions as 
+those contained in the observations. If not, a more dynamic model may be more useful. 
+
+When prediction is about a real world system, so is the model from which it is derived. Thus, the underlying model must be able to reproduce 
+relevant features and dynamics of that real world system. To do so, its dynamics must be "rich" enough = sufficiently powerful = covering enough 
+of the feature space of the system under consideration.
+
+<!---For example, typical models of the financial market are unable to produce the kind of bubbles and bursts we witnessed in the 1920 and 2008 
+<i>from endogenous dynamics</i>. But, as Farmer (2024) argued, the 2008 bubble was mostly internal. So, for such a system we need a feedback-rich 
+complex adaptive system representation, in economics, in biology, in medicine, in environmental science. Only if the model can have peaks of the 
+same order of magnitude as those observed, if response-times are quick (or drawn out) enough, if ranges of patterns can be produced that 
+include the observed, only then is the model likely to be "rich" enough to also include the system under consideration.--->
 
 General references: <sup class="cite-ref" data-cite="farmer 2024"></sup>
 
 
 --- Parameterisation #parameterisation
 ROLE Modeller + stakeholder
-TEXT It seems an ideal of (environmental) modelling that all model parameters are physically/chemically/biologically interpretable. For such parameters, field and lab measurements can be used to state values for the parameter in the model. This is the "parameterisation" of a model.
+TEXT It seems an ideal of (environmental) modelling that all model parameters are physically/chemically/biologically interpretable. For such parameters, 
+field and lab measurements can be used to state values for the parameter in the model. This is the "parameterisation" of a model.
 
-Unobservable model parameters and processes ("latent parameters/processes") cannot be determined by measurement. Some of these are (sometimes disrespectfully) referred to as "fudge factors", particularly if they cannot be scientifically interpreted. Their value can be found by, formally or informally, "tuning" them to make the overall model reproduce the desired patterns. The formal way to do so would use inverse modelling.
+Unobservable model parameters and processes ("latent parameters/processes") cannot be determined by measurement. 
+Some of these are (sometimes disrespectfully) referred to as "fudge factors", particularly if they cannot be scientifically interpreted. Their value can be found by, formally or informally, "tuning" them to make the overall model reproduce the desired patterns. The formal way to do so would use inverse modelling.
 
 One of the design decisions about model characteristics is particularly pertinent to parameterisation: is the model a repository of knowledge or a "Do one thing and do that well." (DOTADTW)? A repository inevitable needs to represent alternative formulations of a process, when the knowledge has not condensed yet (think: different ways to represent water uptake by plants). A DOTADTW "only" needs to work well for the system state under consideration, with no attention to processes further away from the target process. A repository-style model with rarely be fit-able to data; literature/field/lab-derived parameter values (and their uncertainty) are the norm.
 
 General references: <sup class="cite-ref" data-cite="sun 2015"></sup>
 
 --- Sensitivity analysis (global vs local) #sensitivity-analysis
-TEXT A sensitivity analysis (SA) quantifies the influence of model parameter uncertainty by computing the effect of changing a model parameter on a model output \(\hat{y}\). So, if a model represents several state variables, then there will be a SA for each of them. A local SA investigates the response of \(\hat{y}\) to changing one parameter, a global SA changes all model parameters simultaneously.
+TEXT Starting from a default parameterisation, changing any parameter affects the outputs of the model. 
+The systematic exploration of how sensitive output is to parameter changes is the subject of sensitivity analysis (SA). 
+Changing a parameter $p$, say, 10% up and down yields changes in $\hat{y}$. The relative change ($\frac{\Delta \hat{y}}{\Delta p}$) 
+is the "elasticity" of y with respect to p. This elasticity may well be non-linear, i.e. a 20% increase has a stronger or weaker effect 
+than twice that of a 10% change in p, or an increase has a different elasticity than a decrease of p.
+Of course, the effect of changing p depends on the values of all other model parameters. Looking at one parameter at a time is 
+called "local" SA, while exploring all parameters simultaneously is referred to as "global" SA. The latter is usefully presented as 
+a "Morris-plot", with average local elasticities on the x-axis, and the standard deviation of sensitivities across changes in the 
+other parameters on the y-axis.
 
-The "elasticity" of a model parameter is the standardised sensitivity of a parameter, i.e. the change in the SA divided by how much the parameter was changed. Often elasticities are presented in a SA because they are comparable across parameters.
+There is a Morris plot for each model output, as a parameter may be important for one state variable another.
+A bit of care must be taken when doing SA, to ensure a reasonable range and distribution of parameter values is trialled; the 
+original equal-spaced uniform sampling of Morris is outdated, and and random or Latin hypercube sampling from the parameters prior distribution are in its place.
 
-Sensitivity analysis is a well-established yet wide modelling activity. There are different frameworks (Morris, Sobol', Bayesian and machine-learning-based), differing in efficiency and ability to accommodate the shape of the parameters' PDF and the correlation among parameters.
+SA provides a quantification of which parameter (and hereby implied which process) is relevant for a model output. When fitting or tuning a model, 
+one may initially ignore insensitive parameters to facilitate finding useful parameter value distributions.
+
+Arguably, SA is one of the most important scientific information about a model: it states which processes in a model are actually responsible 
+for an observed pattern. For complicated models, although "it is all in the code", the joint effects of several processes feed-backing 
+onto each other cannot be intuited unless through SA. Thus, when no SA is available for a model, this is typically the first step users 
+takes to familiarise themselves with that model. Ideally, a graph would show the marginal effect (with confidence interval) of each 
+model parameter for each model output over the range of plausible values ("effect plot").
+
+Sensitivity analysis is a well-established yet wide modelling activity. There are different frameworks (Morris, Sobol', Bayesian and machine-learning-based), 
+differing in efficiency and ability to accommodate the shape of the parameters' PDF and the correlation among parameters.
 
 General references: <sup class="cite-ref" data-cite="sun 2015"></sup>
 
