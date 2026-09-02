@@ -40,6 +40,7 @@ function renderAll(raw){
   collectConnectors(data.phases);
   drawConnectors();
   typesetMath([main, document.getElementById('intro-body'), highlightOut]);
+  document.dispatchEvent(new Event('basis-rendered'));
 }
 
 function showContentLoadError(err){
