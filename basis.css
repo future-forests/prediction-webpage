@@ -742,30 +742,16 @@ body.detail-page p,
 body.embedded-detail p{
   margin:9px 0 6px;
 }
-body.detail-page p.detail-block,
-body.embedded-detail p.detail-block{
-  margin:0 0 14px;
-  padding:12px 14px;
-  background:rgba(255,255,255,0.72);
-  border:1px solid rgba(26,58,42,0.08);
-  border-left:3px solid rgba(45,106,79,0.35);
-  border-radius:8px;
-  line-height:1.72;
-}
-body.detail-page p.detail-block:last-child,
-body.embedded-detail p.detail-block:last-child{
-  margin-bottom:0;
-}
-body.detail-page p.detail-block > b,
-body.embedded-detail p.detail-block > b{
+body.detail-page p > b:first-child,
+body.embedded-detail p > b:first-child{
   display:block;
   margin-bottom:6px;
   font-family:'Lora',serif;
   font-size:.95rem;
   color:var(--green-deep);
 }
-body.detail-page p.detail-block > em,
-body.embedded-detail p.detail-block > em{
+body.detail-page p > em:first-child,
+body.embedded-detail p > em:first-child{
   font-style:normal;
   font-weight:700;
   color:var(--green-deep);

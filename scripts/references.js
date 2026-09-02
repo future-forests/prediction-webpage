@@ -29,5 +29,3 @@ window.BASIS_BIBLIO={
   'Wolter 2007':'Wolter, K. M. (2007). Introduction to Variance Estimation (2nd ed.). Springer.',
 
 };
-
-window.MODEL_INVERSION_BIBLIO=window.BASIS_BIBLIO;

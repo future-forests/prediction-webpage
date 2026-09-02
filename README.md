@@ -8,7 +8,7 @@ A community-authored, interactive web resource for researchers and practitioners
 
 ## How to contribute
 
-Most edits go in **`webpage.html`** (syntax guide in the HTML comment; content in the `<script id="page-content">` block from `## INTRO`). Detail pages live in **`details/`**.
+Most edits go in **`webpage.html`** (syntax guide in the HTML comment; content in the `<script id="page-content">` block from `## INTRO`). Detail pages live in **`details/`** — one file per topic, each with its own `<script id="page-content">` block and editor guide comment (see e.g. `details/setting-stage.html`).
 
 1. **Fork** the repo on GitHub (or clone if you are a collaborator).
 2. **Create a branch** from `main`:

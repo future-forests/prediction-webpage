@@ -1,15 +1,9 @@
 // Detail page overlay — pages live at details/{id}.html, matching each #id in basis.html.
-var DETAIL_PLACEHOLDER_TEXT='This page is a placeholder for this section/sub-section and will be completed later.';
 
 function isDetailPlaceholderHtml(html){
   var doc=new DOMParser().parseFromString(html,'text/html');
-  var body=doc.body;
-  if(!body) return true;
-  var clone=body.cloneNode(true);
-  var scripts=clone.querySelectorAll('script, style');
-  for(var i=0;i<scripts.length;i++) scripts[i].remove();
-  var text=clone.textContent.replace(/\s+/g,' ').trim();
-  return text===DETAIL_PLACEHOLDER_TEXT;
+  var contentEl=doc.getElementById('page-content');
+  return !contentEl||!contentEl.textContent.replace(/\s+/g,' ').trim();
 }
 
 function hidePlaceholderDetailButtons(){
@@ -34,41 +28,12 @@ function hidePlaceholderDetailButtons(){
   }
 }
 
-function normalizeDetailContent(body){
-  if(!body||body.dataset.detailNormalized) return;
-  var blockChildren=[].filter.call(body.children,function(el){
-    return !/^(SCRIPT|STYLE)$/i.test(el.tagName);
-  });
-  var hasBlocks=blockChildren.some(function(el){
-    return /^(P|UL|OL|LI|DIV|TABLE|BLOCKQUOTE|H[1-6]|HR|SECTION|ARTICLE|PRE)$/i.test(el.tagName);
-  });
-  if(hasBlocks){
-    body.dataset.detailNormalized='skip';
-    return;
-  }
-  var parts=body.innerHTML.split(/\n\s*\n+/).map(function(part){ return part.trim(); }).filter(Boolean);
-  if(parts.length<=1){
-    body.dataset.detailNormalized='skip';
-    return;
-  }
-  body.innerHTML=parts.map(function(part){ return '<p class="detail-block">'+part+'</p>'; }).join('');
-  body.dataset.detailNormalized='1';
-}
-
 function typesetDetailFrame(doc){
   if(!doc||!doc.body) return;
-  normalizeDetailContent(doc.body);
   var win=doc.defaultView;
   if(win.MathJax&&win.MathJax.typesetPromise){
     win.MathJax.typesetPromise([doc.body]);
-    return;
   }
-  var s=doc.createElement('script');
-  s.src='https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js';
-  s.onload=function(){
-    if(win.MathJax&&win.MathJax.typesetPromise) win.MathJax.typesetPromise([doc.body]);
-  };
-  doc.head.appendChild(s);
 }
 
 function handleDetailOverlayEscape(e){
