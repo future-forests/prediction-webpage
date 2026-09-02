@@ -373,19 +373,32 @@ In a similar way, uncertainty decomposition delineates areas of relative robust 
 Use ANOVA- or randomforest-importance-like decomposition (Note: Shapley and PDP have different meaning for correlated input, somewhat like type I and III for ANOVA).
 IMPORTANT 🔔 Always use several models for structural uncertainty.
 
+
+
+
+
 === 5. Utilisation #utilisation
 ROLE Modeller + Stakeholder
 RATIONALE [text]
 
 --- Joint interpretation #communication
-TEXT [text]
+TEXT What the prediction means should be anticipated in <a href=#setting-stage>Stage 1</a>.
+However, given the various steps the prediction-making has gone through, the user should not be left alone with the prediction. In particular the interpretation of uncertainty around the mean prediction, and the attribution of uncertainty to different sources demands clarity. 
+
+Ideally, the user should do the interpretation, that is, do the talking. It will give the predictor the chance to learn where communication is difficult, which elements are easily misunderstood, which communication strategy has (not) worked and so forth. Upon this user interpretation, a round of „clarification in dialogue“ may prove helpful. 
+Ideally, a user/modeller joint statement could form the final product of the user/modeller collaboration.
+
   >>> 📢 Communicate #communicate
       [text]
   >>> ↩️ Feedback #feedback
       [text]
 
 --- Use / exploit prediction #use-exploit-prediction
-TEXT Use or exploit the prediction, for example, to take management decisions.
+TEXT How the prediction is used should be known from the (<a href=#setting-stage>start</a>). 
+If the prediction of the size of an endangered population under different management types clearly indicates one over the other, decision makers may want to use this predictive assessment.
+
+If the different management options overlap in their predicted effect (given the uncertainty of the prediction), the ideal decision falls into the field of <a href="https://en.wikipedia.org/wiki/Decision_theory">decision science</a>, but the job of prediction is done.
+
 EXAMPLE 🪏 Worked example (fisheries)
   How much fish biomass can be extracted from this region of the ocean next year and remain below maximum sustainable yield?
 
@@ -412,8 +425,9 @@ scenario planning | Generating predictions under a range of plausible future con
 
 
 ## CHECKLIST
->>> Overparameterised models make poor predictions: too much detail may hurt | LINK long-term-planning
-(This is example text to check this level works at this place.)
+>>> Should models aim for simplicity or for completeness? #ContentiousSimplicityComplexity | LINK long-term-planning
+Overparameterised models make poor predictions: too much detail may hurt.
+
 >>> Validation needs to be planned: split data into MANY subsets | LINK validation
 >>> Upscale of microlevel processes | LINK specify-model
 >>> Always use several models for structural uncertainty | LINK uncertainty-decomp
