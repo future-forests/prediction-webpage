@@ -81,18 +81,45 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--parchment);color:
 
 /* ── LAYOUT ─────────────────────────────────────────────── */
 .page-body{margin-left:var(--sidebar-w);position:relative;}
-.ff-corner-logo{
+.header-corner-links{
   position:absolute;
   top:10px;
   right:12px;
   display:flex;
   align-items:center;
+  gap:8px;
+}
+.contrib-link,
+.ff-corner-logo{
+  display:flex;
+  align-items:center;
   justify-content:center;
-  padding:4px 6px;
+  padding:4px 8px;
   border-radius:8px;
   background:rgba(255,255,255,0.9);
   border:1px solid rgba(26,58,42,0.2);
   box-shadow:0 2px 8px rgba(0,0,0,0.15);
+  text-decoration:none;
+  transition:background .15s,box-shadow .15s;
+}
+.contrib-link:hover,
+.ff-corner-logo:hover{
+  background:#fff;
+  box-shadow:0 3px 10px rgba(0,0,0,0.18);
+}
+.contrib-link{
+  gap:6px;
+  color:var(--green-deep);
+  font-size:.72rem;
+  font-weight:600;
+  letter-spacing:.02em;
+}
+.contrib-label{white-space:nowrap}
+.github-icon{
+  display:block;
+  width:16px;
+  height:16px;
+  flex-shrink:0;
 }
 .ff-corner-logo img{
   display:block;
@@ -807,9 +834,19 @@ body.show-links #connector-svg{display:block}
 @media(max-width:700px){
   .sidebar{display:none}
   .page-body{margin-left:0}
-  .ff-corner-logo{
+  .header-corner-links{
     top:8px;
     right:10px;
+    gap:6px;
+  }
+  .contrib-link{
+    font-size:.66rem;
+    padding:4px 6px;
+    gap:4px;
+  }
+  .github-icon{
+    width:14px;
+    height:14px;
   }
   .ff-corner-logo img{
     height:24px;
