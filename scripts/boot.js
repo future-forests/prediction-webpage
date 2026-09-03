@@ -1,8 +1,9 @@
 // Render the whole page from the parsed content and initialise the interactive widgets.
 function typesetMath(roots){
-  if(!window.MathJax||!MathJax.typesetPromise) return;
+  if(!window.MathJax||!MathJax.typesetPromise) return Promise.resolve();
   var els=[].concat(roots||[]).filter(Boolean);
-  if(els.length) MathJax.typesetPromise(els);
+  if(els.length) return MathJax.typesetPromise(els);
+  return Promise.resolve();
 }
 window.typesetMath=typesetMath;
 
@@ -38,8 +39,9 @@ function renderAll(raw){
 
   buildSidebar(data.phases);
   collectConnectors(data.phases);
+  initConnectorObserver(main);
   drawConnectors();
-  typesetMath([main, document.getElementById('intro-body'), highlightOut]);
+  typesetMath([main, document.getElementById('intro-body'), highlightOut]).then(drawConnectors);
   document.dispatchEvent(new Event('basis-rendered'));
   if(window.location.hash) navigateToInPageTarget(window.location.hash);
 }
