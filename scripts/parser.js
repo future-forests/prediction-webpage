@@ -37,14 +37,29 @@ function parseContent(raw) {
     'text-after':'bodyAfter',
     example:'example',
     important:'important',
-    'sub-desc':'desc'
+    'sub-desc':'desc',
+    'checklist-desc':'desc'
   };
 
   function fieldTarget(){
     if(curField==='rationale') return curPhase&&!curNode?curPhase:null;
     if(curField==='text'||curField==='text-after'||curField==='example'||curField==='important') return curNode;
     if(curField==='sub-desc') return curSub;
+    if(curField==='checklist-desc'&&result.checklist.length) return result.checklist[result.checklist.length-1];
     return null;
+  }
+
+  function pushChecklistItem(namePart, pipeTail){
+    var itemMeta=splitDefinedId(namePart);
+    var lm=pipeTail&&trimVal(pipeTail).match(/LINK\s+(\S+)/);
+    var itemId=itemMeta.id||('checklist-'+(result.checklist.length+1));
+    result.checklist.push({
+      id:itemId,
+      icon:'',
+      name:itemMeta.label,
+      desc:'',
+      link:lm?lm[1]:null
+    });
   }
 
   function appendToCurrentField(line){
@@ -104,10 +119,20 @@ function parseContent(raw) {
     }
     if(line.indexOf('>>> ')===0){
       if(section==='CHECKLIST'){
+        flush();
         var cp=trimVal(line.slice(4)).split('|');
-        var itemMeta=splitDefinedId(trimVal(cp[0]));
+        var subParts=parseSubItemRaw(trimVal(cp[0]));
+        var itemMeta=splitDefinedId(subParts.namePart);
         var lm=cp[1]&&trimVal(cp[1]).match(/LINK\s+(\S+)/);
-        result.checklist.push({text:itemMeta.label,link:lm?lm[1]:(itemMeta.id||null)});
+        var itemId=itemMeta.id||('checklist-'+(result.checklist.length+1));
+        result.checklist.push({
+          id:itemId,
+          icon:subParts.icon,
+          name:itemMeta.label,
+          desc:'',
+          link:lm?lm[1]:null
+        });
+        curField='checklist-desc';
         continue;
       }
       flush();
@@ -178,12 +203,13 @@ function parseContent(raw) {
     }
     if(section==='CHECKLIST'){
       if(line.indexOf('|')>-1){
+        flush();
         var cp=line.split('|');
-        var itemMeta=splitDefinedId(trimVal(cp[0]));
-        var lm=cp[1]&&trimVal(cp[1]).match(/LINK\s+(\S+)/);
-        result.checklist.push({text:itemMeta.label,link:lm?lm[1]:(itemMeta.id||null)});
+        pushChecklistItem(trimVal(cp[0]),cp[1]);
+      }else if(curField==='checklist-desc'&&appendToCurrentField(line)){
+        /* appended to desc */
       }else if(result.checklist.length){
-        result.checklist[result.checklist.length-1].text+=' '+line;
+        result.checklist[result.checklist.length-1].name+=' '+line;
       }
       continue;
     }

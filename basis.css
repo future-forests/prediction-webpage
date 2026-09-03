@@ -536,15 +536,8 @@ body > p[id^="footnote-"] .footnote-label{
   pointer-events:none;
 }
 .sec-sub{color:var(--ink-muted);font-size:.84rem;margin-bottom:18px}
-.checklist-item{
-  display:flex;gap:10px;align-items:flex-start;
-  background:#fff;border:1px solid var(--rule);
-  border-left:3px solid #cc3333;border-radius:7px;
-  padding:9px 13px;margin-bottom:7px;
-  font-size:0.84rem;color:var(--ink-mid);line-height:1.6;
-}
-.checklist-icon{flex-shrink:0}
-.checklist-jump{color:#cc3333;font-weight:600;text-decoration:none}
+.checklist-list .sub-item{border-left:3px solid #cc3333}
+.checklist-jump{color:#cc3333;font-weight:600;text-decoration:none;margin-left:4px}
 .glos-grid{
   display:grid;grid-template-columns:repeat(auto-fill,minmax(250px,1fr));
   gap:9px;margin-top:12px;

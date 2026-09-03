@@ -9,7 +9,7 @@ function escapeAttr(value){
     .replace(/>/g,'&gt;');
 }
 
-function isPlaceholder(text){ return !text||text.trim()==='[text]'; }
+function isPlaceholder(text){ return !text||text.trim()===''||text.trim()==='[text]'; }
 
 function renderDetailsButton(leafId, title){
   return '<div class="details-row"><button class="more-details-btn" type="button" data-detail-id="'+escapeAttr(leafId)+'" data-detail-title="'+escapeAttr(title||leafId)+'">More details</button></div>';
@@ -187,10 +187,18 @@ function renderGlossary(entries){
 }
 
 function renderChecklist(items){
-  var html='';
+  if(!items||!items.length) return '';
+  var html='<ul class="sub-list checklist-list">';
   for(var i=0;i<items.length;i++){
-    var jump=items[i].link?' <a href="#'+items[i].link+'" class="checklist-jump">&rarr;</a>':'';
-    html+='<div class="checklist-item"><span class="checklist-icon">&#128276;</span><span>'+items[i].text+jump+'</span></div>';
+    var s=items[i], leafId=s.id||('checklist-'+i);
+    html+='<li><div class="sub-item" id="'+escapeAttr(leafId)+'">';
+    if(s.icon) html+='<span class="si-icon">'+s.icon+'</span>';
+    html+='<div class="si-body">';
+    var jump=s.link?' <a href="#'+escapeAttr(s.link)+'" class="checklist-jump">&rarr;</a>':'';
+    html+='<div class="si-name">'+s.name+jump+'</div>';
+    if(!isPlaceholder(s.desc)) html+='<div class="si-desc">'+renderRichText(s.desc)+'</div>';
+    html+=renderDetailsButton(leafId,s.name);
+    html+='</div></div></li>';
   }
-  return html;
+  return html+'</ul>';
 }

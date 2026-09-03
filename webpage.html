@@ -44,14 +44,15 @@
     One entry per line: term | definition
     Terms are underlined automatically wherever they appear in the text (once per paragraph).
 
-  CHECKLIST (under ## CHECKLIST):
+  CHECKLIST:
 
-    One entry per line — plain text, or with a jump link:
-    Validation needs to be planned | LINK validation
+    Same syntax as >>> sub-items inside cards:
+      >>> Title text #my-id | LINK target-card-id
+        Optional summary text shown under the title.
 
   "MORE DETAILS" PAGES:
 
-    Every phase, item and sub-item has a "More details" button.
+    Every phase, item, sub-item and checklist entry has a "More details" button.
     Add a content file at details/{id}.txt — {id} is the #id on that line.
     Optional first line: TITLE: My page title
     Syntax: ## heading, ### subheading, blank line = paragraph, EXAMPLE/IMPORTANT boxes.
@@ -78,7 +79,7 @@ Newcomers may want orientation, this resource aims to provide it.
 
 Predictions use models, hence quite a bit of this orientation touches on modelling. It does so, somewhat obscurely, in
 <a href=#modelling>Stage 3</a> under "<a href=#identifying-models>Building trust in model</a>". The reason is that in this context the modelling steps primarily serve to justify the
-choice of the model(s). How to model, and which model to use when is discussed under "<a href=#bones>Bones of contention</a>".
+choice of the model(s). How to model, and which model to use when is discussed under "<a href=#checklist>Checklist</a>".
 
 A model is a flexible thing here: it can be a set of expert statements, a process model, or a deep-learning analysis.
 A prediction is a quantitative statement of a model, including forecasts and projections.
@@ -377,7 +378,7 @@ The quality of predictions is currently unknown due to lack of uncertainty quant
     LINK specific-question
 
 
-## Checklist #bones
+## Checklist #checklist
       >>> Should models aim for simplicity or for completeness? #ContentiousSimplicityComplexity | LINK long-term-planning
         Overparameterised models make poor predictions: too much detail may hurt.
 
