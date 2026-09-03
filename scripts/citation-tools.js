@@ -132,6 +132,7 @@
 
   function hydrate(opts){
     opts=opts||{};
+    var root=opts.root||document;
     var biblio=getBiblio(opts);
     var citationSelector=opts.citationSelector||'.cite-ref[data-cite]';
     var footnoteSupSelector=opts.footnoteSupSelector||'.footnote-ref';
@@ -139,7 +140,7 @@
     var missingPrefix=opts.missingPrefix||'Reference details not found for ';
 
     var seen={}, orderedKeys=[], nextNum=1;
-    var cites=document.querySelectorAll(citationSelector);
+    var cites=root.querySelectorAll(citationSelector);
     for(var i=0;i<cites.length;i++){
       var cite=cites[i];
       var raw=(cite.getAttribute('data-cite')||'').trim();
@@ -155,14 +156,14 @@
       cite.removeAttribute('title');
     }
 
-    var sups=document.querySelectorAll(footnoteSupSelector);
+    var sups=root.querySelectorAll(footnoteSupSelector);
     for(var j=0;j<sups.length;j++){
       sups[j].textContent=numberToLetters(j+1);
       if(!sups[j].getAttribute('tabindex')) sups[j].setAttribute('tabindex','0');
     }
 
     if(footnoteLabelSelector){
-      var labels=document.querySelectorAll(footnoteLabelSelector);
+      var labels=root.querySelectorAll(footnoteLabelSelector);
       for(var k=0;k<labels.length;k++) labels[k].textContent=numberToLetters(k+1)+'. ';
     }
 

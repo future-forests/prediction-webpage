@@ -1,23 +1,21 @@
-// Render detail page content from <script type="text/content" id="page-content">.
+// Standalone detail preview — details/page.html?id={id}
 function mountDetailPage(){
-  var el=document.getElementById('page-content');
-  if(!el||typeof renderDetailContent!=='function') return;
-  var html=renderDetailContent(el.textContent);
-  document.body.innerHTML=html;
+  var params=new URLSearchParams(window.location.search);
+  var id=params.get('id');
+  if(!id) return;
 
-  if(window.CitationTools){
-    window.CitationTools.hydrate({
-      biblioGlobal:'BASIS_BIBLIO',
-      citationSelector:'.cite-ref[data-cite]',
-      footnoteSupSelector:'.footnote-ref',
-      footnoteLabelSelector:'.footnote-label',
-      missingPrefix:'Reference details not found in central bibliography for '
+  loadDetail(id).then(function(raw){
+    if(isDetailPlaceholder(raw)){
+      document.body.innerHTML='<p style="color:var(--ink-muted);font-style:italic">No detail content found for <code>'+id+'</code>.</p>';
+      return;
+    }
+    var title=mountDetail({
+      raw:raw,
+      target:document.body,
+      fallbackTitle:id
     });
-  }
-
-  if(window.MathJax&&window.MathJax.typesetPromise){
-    window.MathJax.typesetPromise([document.body]);
-  }
+    if(title) document.title=title;
+  });
 }
 
 document.addEventListener('DOMContentLoaded',mountDetailPage);

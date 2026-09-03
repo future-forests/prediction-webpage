@@ -657,12 +657,13 @@ footer a:hover{text-decoration:underline}
   border-color:rgba(193,127,36,0.5);
   color:#7a4f10;
 }
-.detail-overlay-frame{
+.detail-overlay-body{
   width:100%;
-  border:0;
   flex:1;
   min-height:0;
-  height:100%;
+  overflow:auto;
+  padding:28px 36px 44px;
+  box-sizing:border-box;
   background:
     radial-gradient(circle at 20% 0%, rgba(82,183,136,0.06), transparent 32%),
     linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0));
@@ -863,7 +864,7 @@ body.show-links #connector-svg{display:block}
   .detail-overlay-hd{
     padding:18px 16px 14px;
   }
-  .detail-overlay-frame{
-    height:100%;
+  .detail-overlay-body{
+    padding:24px 20px 28px;
   }
 }

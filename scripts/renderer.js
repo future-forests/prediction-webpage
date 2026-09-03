@@ -12,8 +12,7 @@ function escapeAttr(value){
 function isPlaceholder(text){ return !text||text.trim()==='[text]'; }
 
 function renderDetailsButton(leafId, title){
-  var page='details/'+leafId+'.html';
-  return '<div class="details-row"><button class="more-details-btn" type="button" data-detail-page="'+escapeAttr(page)+'" data-detail-title="'+escapeAttr(title||leafId)+'">More details</button></div>';
+  return '<div class="details-row"><button class="more-details-btn" type="button" data-detail-id="'+escapeAttr(leafId)+'" data-detail-title="'+escapeAttr(title||leafId)+'">More details</button></div>';
 }
 
 function hasBlockHtml(text){

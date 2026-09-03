@@ -8,7 +8,7 @@ A community-authored, interactive web resource for researchers and practitioners
 
 ## How to contribute
 
-Most edits go in **`webpage.html`** (syntax guide in the HTML comment; content in the `<script id="page-content">` block from `## INTRO`). Detail pages live in **`details/`** — one file per topic, each with its own `<script id="page-content">` block and editor guide comment (see e.g. `details/setting-stage.html`).
+Most edits go in **`webpage.html`** (syntax guide in the HTML comment; content in the `<script id="page-content">` block from `## INTRO`). Detail pages live in **`details/`** as plain `.txt` files — one per topic, created only when there is content (see [`details/EDITOR-GUIDE.md`](details/EDITOR-GUIDE.md) and e.g. `details/setting-stage.txt`).
 
 1. **Fork** the repo on GitHub (or clone if you are a collaborator).
 2. **Create a branch** from `main`:
@@ -34,7 +34,7 @@ Most edits go in **`webpage.html`** (syntax guide in the HTML comment; content i
 prediction_webpage/
 ├── basis.html              # page shell and scripts
 ├── webpage.html            # editor guide + all page content
-├── details/                # "More details" sub-pages
+├── details/                # "More details" content (.txt) + page.html shell
 ├── scripts/                # parser, renderer, interactivity
 ├── push.sh                 # one-command deploy script
 └── README.md               # this file

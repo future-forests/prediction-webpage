@@ -1,36 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="../basis.css">
-<title>Orientation: Model Inversion</title>
-<script defer src="https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js"></script>
-<script defer src="../scripts/citation-tools.js"></script>
-<script defer src="../scripts/references.js"></script>
-<script defer src="../scripts/renderer.js"></script>
-<script defer src="../scripts/detail-boot.js"></script>
-</head>
-<body class="detail-page">
-
-<!--
-  DETAIL PAGE EDITOR GUIDE
-
-  Edit the <script> block below. Preview via a local web server (see project README).
-
-  ## Heading       section title
-  ### Subheading   subsection
-  blank line       new paragraph
-  ---              horizontal rule
-  EXAMPLE heading  highlighted example box (heading on same line)
-  IMPORTANT heading highlighted warning box
-
-  Inline HTML OK:  <em>Label:</em>, <a href=#id>, <i>emphasis</i>,
-                   <sup class="cite-ref" data-cite="Author Year"></sup>
-  Math:            \(...\) or \[...\]
--->
-
-<script type="text/content" id="page-content">
+TITLE: Orientation: Model Inversion
 
 Model inversion describes the estimation of model parameters from data and a defined measure of fit <a id="footnote-1-ref" href="#footnote-1"><sup class="footnote-ref"></sup></a>. Common examples include parameter estimation in engineering, geophysics (infer Earth properties from seismic data), remote sensing (infer land/atmosphere properties from satellite observations), and data assimilation in weather/climate, or for that matter <a href="https://www.youtube.com/watch?v=Y5TFSvE-lpg">cosmology</a>.
 
@@ -78,8 +46,3 @@ Footnotes
 <p id="footnote-1"><span class="footnote-label"></span> Depending on the research field, this activity goes by "fitting", "calibration", "tuning", "parameterisation", "backwards modelling", each with slightly different meaning and goal. <a href="#footnote-1-ref">&#8617;</a></p>
 
 <p id="footnote-2"><span class="footnote-label"></span> For example, if our individual-based model predicts the number of cuckoos in some landscape, then, assuming those to be represented by a Poisson distribution, we have: \(\text{number of cuckoos} \sim \text{Pois}(\lambda=\text{IBM}(X, \theta))\). The IBM also has the job of ensuring only valid values of \(\lambda\), allowing us to omit the link-function of a GLM. <a href="#footnote-2-ref">&#8617;</a></p>
-
-</script>
-
-</body>
-</html>
