@@ -49,16 +49,20 @@ function parseContent(raw) {
     return null;
   }
 
+  function parseChecklistJump(pipeTail){
+    var m=pipeTail&&trimVal(pipeTail).match(/JUMP\s+(\S+)/);
+    return m?m[1]:null;
+  }
+
   function pushChecklistItem(namePart, pipeTail){
     var itemMeta=splitDefinedId(namePart);
-    var lm=pipeTail&&trimVal(pipeTail).match(/LINK\s+(\S+)/);
     var itemId=itemMeta.id||('checklist-'+(result.checklist.length+1));
     result.checklist.push({
       id:itemId,
       icon:'',
       name:itemMeta.label,
       desc:'',
-      link:lm?lm[1]:null
+      jump:parseChecklistJump(pipeTail)
     });
   }
 
@@ -123,14 +127,14 @@ function parseContent(raw) {
         var cp=trimVal(line.slice(4)).split('|');
         var subParts=parseSubItemRaw(trimVal(cp[0]));
         var itemMeta=splitDefinedId(subParts.namePart);
-        var lm=cp[1]&&trimVal(cp[1]).match(/LINK\s+(\S+)/);
+        var lm=cp[1]&&trimVal(cp[1]).match(/JUMP\s+(\S+)/);
         var itemId=itemMeta.id||('checklist-'+(result.checklist.length+1));
         result.checklist.push({
           id:itemId,
           icon:subParts.icon,
           name:itemMeta.label,
           desc:'',
-          link:lm?lm[1]:null
+          jump:lm?lm[1]:null
         });
         curField='checklist-desc';
         continue;

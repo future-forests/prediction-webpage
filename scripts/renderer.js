@@ -194,7 +194,7 @@ function renderChecklist(items){
     html+='<li><div class="sub-item" id="'+escapeAttr(leafId)+'">';
     if(s.icon) html+='<span class="si-icon">'+s.icon+'</span>';
     html+='<div class="si-body">';
-    var jump=s.link?' <a href="#'+escapeAttr(s.link)+'" class="checklist-jump">&rarr;</a>':'';
+    var jump=s.jump?' <a href="#'+escapeAttr(s.jump)+'" class="checklist-jump">&rarr;</a>':'';
     html+='<div class="si-name">'+s.name+jump+'</div>';
     if(!isPlaceholder(s.desc)) html+='<div class="si-desc">'+renderRichText(s.desc)+'</div>';
     html+=renderDetailsButton(leafId,s.name);
