@@ -219,12 +219,12 @@ The quality of predictions is currently unknown due to lack of uncertainty quant
 
     General references: <sup class="cite-ref" data-cite="Schmolke 2010"></sup> <sup class="cite-ref" data-cite="Getz 2018"></sup>
 
-      >>> Code verification/unit testing #code-verification
+      >>> ✅ Code verification/unit testing #code-verification
         Coded models should be checked to be working correctly. This is important in model development (and there often referred to as <a target="_blank" href="https://en.wikipedia.org/wiki/Unit_testing">"unit testing"</a>), but also for users of models: we want to make sure that the model does what it is supposed to do.
 
         The essential step to do so is by defining test cases, where the correct output of the model component is known; unless the model produces this known output, it is faulty. In advanced software development, unit testing is automatised and carried out after every major modification of code (e.g. for <a target="_blank" href="https://testthat.r-lib.org">R</a>, <a target="_blank" href="https://docs.python.org/3/library/unittest.html">Python</a>, <a target="_blank" href="https://www.geeksforgeeks.org/software-testing/embedded-c-cpp-unit-testing-basics">C++</a>). Unit testing is necessary but not sufficient for code verification; other elements of testing need to be considered as well (<a target="_blank" href="https://en.wikipedia.org/wiki/Software_testing">scalability, maintainability, performance</a>).
 
-      >>> Is model "rich" enough? #model-rich
+      >>> 💰 Is model "rich" enough? #model-rich
         Extreme events are often of particular relevance in environmental predictions, yet they are difficult to predict. One reason is that the statistical noise around a prediction, based on the unexplained variance in the validation data, may follow a distribution with "<a href="https://en.wikipedia.org/wiki/Heavy-tailed_distribution">heavy tails"</a>.  Such distributions are very difficult to distinguish from those with normal, thin tails, and are thus not typically used when fitting models Examples include the <a href="https://en.wikipedia.org/wiki/Generalized_extreme_value_distribution">Generalised Extreme Value distribution</a>, <a href="https://en.wikipedia.org/wiki/L%C3%A9vy_distribution">Lévy distribution</a>, <a href="https://en.wikipedia.org/wiki/Zipf%E2%80%93Mandelbrot_law">Zipf-Mandelbrot "law"</a> or <a href="https://en.wikipedia.org/wiki/Log-logistic_distribution">log-logistic distribution</a>.<sup class="cite-ref" data-cite="Taleb 2008"></sup> As a result, even a perfectly predicted mean would not yield realistic extremes, unless combined with such heavy-tailed error distributions.
 
         Another reason why extremes are under-predicted is that the models underlying them are not extreme enough in their dynamics. For example, if a positive feedback is omitted, the system will develop too linearly and is not "rich" enough to show radical dynamics. In economics models of too "poor" endogenous dynamics are blamed for the inability of mainstream models to instantiate extreme boom-and-bust phenomena, which the real world regrettable exhibits<sup class="cite-ref" data-cite="Farmer 2024"></sup>].
@@ -239,7 +239,7 @@ The quality of predictions is currently unknown due to lack of uncertainty quant
         same order of magnitude as those observed, if response-times are quick (or drawn out) enough, if ranges of patterns can be produced that
         include the observed, only then is the model likely to be "rich" enough to also include the system under consideration.--->
 
-      >>> Parameterisation #parameterisation
+      >>> ⚙️ Parameterisation #parameterisation
         ROLE Modeller + stakeholder
         It seems an ideal of (environmental) modelling that all model parameters are physically/chemically/biologically interpretable. For such parameters, field and lab measurements can be used to state values for the parameter in the model. This is the "parameterisation" of a model.
 
@@ -250,7 +250,7 @@ The quality of predictions is currently unknown due to lack of uncertainty quant
 
         General references: <sup class="cite-ref" data-cite="Sun 2015"></sup>
 
-      >>> Sensitivity analysis (global vs local) #sensitivity-analysis
+      >>> 🔍 Sensitivity analysis (global vs local) #sensitivity-analysis
         Starting from a default parameterisation, changing any parameter affects the outputs of the model.
         The systematic exploration of how sensitive output is to parameter changes is the subject of sensitivity analysis (SA).
         Changing a parameter \(p\), say, 10% up and down yields changes in \(\hat{y}\). The relative change (\(\frac{\Delta \hat{y}}{\Delta p}\))
@@ -268,39 +268,48 @@ The quality of predictions is currently unknown due to lack of uncertainty quant
 
         General references: <sup class="cite-ref" data-cite="Sun 2015"></sup>
 
-      >>> Model inversion, Calibration #model-inversion
-        Model inversion serves two purposes:
+      >>> 🧾 Model inversion, Calibration #model-inversion
+        Statistical models are full data-driven, while process models traditionally are idealised as "forward models", where all parameters are known and immutable. In reality, they were to a smaller or larger extent tuned to data and patterns. Such tuning is often done as part of model development.
+
+        In contrast, model inversion is applied to a finished model, and mean re-estimating the model parameters based on target data. This ensures a maximal suitability of that model for describing <i>these</i> data, albeit at the potential expense of generality.
+
+        Model inversion serves several purposes, most importantly:
 
         <ol>
           <li> Identify structural errors in the model.
           <li> Improve representation of observations.
+          <li> Improve predictions from model by reducing bias.
         </ol>
 
-        Model inversion requires some technical overhead to "invert" the model. Optimising multiple criteria is the key challenge. Model outputs are sometimes biased or systematically distorted and require, well, calibrating (in the sense of a calibration curve in chemistry).
+        Model inversion requires some technical overhead to "invert" the model (see details). Optimising multiple criteria is the key challenge. Computation effort may be prohibitive for large models.
+
+        On the other hand, model outputs are sometimes biased or systematically distorted and require, well, calibrating (in the sense of a calibration curve in chemistry). That is fully accepted in statistics (although not necessarily in machine learning<sup class="cite-ref" data-cite="Dormann 2020"></sup>), and model inversion is seeping gradually into fields such as cosmology<sup class="cite-ref" data-cite="Akeret 2015"></sup> and economics<sup class="cite-ref" data-cite="Lux 2023"></sup>.
 
         IMPORTANT 🔔 Calibration is really useful.
         LINK validation
 
-        <ol>
-          <li>🔬 Optimisation
-          <li>🎰 MCMC
-          <li>🧮 ABC
-          <li>🧩 POM
-        </ol>
-
-      >>> Uncertainty analysis #uncertainty-analysis
+      >>> 🌀 Uncertainty analysis #uncertainty-analysis
         Uncertainty analysis (UA)<sup class="cite-ref" data-cite="Committee 2012"></sup> aims at representing the consequences of all sources of variation on the prediction (data, model structure, model parameters, model stochasticity, initial values, scenarios, and so forth<div class="cite-ref" data-cite="Dormann 2026"></div>). Methods to propagate uncertainty through a model-and-prediction-pipeline include bootstrapping, Taylor expansions and Bayesian modelling.<sup class="cite-ref" data-cite="Taylor 1997">,</sup><sup class="cite-ref" data-cite="Benaroya 2005">,</sup><sup class="cite-ref" data-cite="Wolter 2007"></sup> Typically UA results in a probability distribution (PDF), summarised e.g. by mean or median and 95% confidence interval. In contrast to raw model residuals (i.e. difference between point prediction and observation), PDFs allow expressing residuals in relation to the prediction uncertainty, e.g. as percentiles or as z-score.
 
         After quantifying prediction uncertainty, three follow-up steps may follow: (1) an analysis of the sources of uncertainty ("uncertainty decomposition"), using ANOVA or variable-importance-based approaches. If test/validation data are available: (2) quantification of expected prediction error (based on raw residuals of prediction to test data, e.g. RMSPE); and (3) computation of some measure of prediction quality based on the PDF (log-likelihood, or, if no assumption about the PDF shall be made, by CPRS<sup class="cite-ref" data-cite="Matheson 1976"></sup>). The last step can be extended to compute prediction limits.,<sup class="cite-ref" data-cite="Wesselkamp 2025"></sup>
 
         IMPORTANT 🔔 Validation needs to be planned: split data into MANY subsets.
 
-      >>> Validation #validation
-        External validation is an honest estimate of prediction quality.
+      >>> 🛡️ Validation #validation
+        Independent validation is an honest estimate of prediction quality. "Independent" here means in particular that the data used for validation are not correlated with those used for training/parameterising the model.
+
+        The most obvious non-independence are due to proximity in space, time or some form of grouping. For example, two adjacent points in an (autocorrelated) time series are not independent, two adjacent (spatially autocorrelated) samples in space are not independent, and neither are two animals sampled from the same group or two species in the same branch of a phylogeny. This means that an independent validation data set must be created such that it samples beyond the range of spatial/temporal/grouping autocorrelation of the raw data.<sup class="cite-ref" data-cite="Roberts 2017"></sup> The most common form of validation, using random assignment of data to different validation folds, is thus often invalid.<sup class="cite-ref" data-cite="Bahn 2013"></sup> <sup class="cite-ref" data-cite="Ploton 2020"></sup>
+
+        In a more subtle way, non-independence also arises because modellers learn from each other, lean on common descriptions of a process, develop their model on the basis of a previous one and use the same global patterns as targets for their models. For any given process model, the data used <i>indirectly</i> to derive model formulations and parameters are unknown. This has two implications: (1) model comparisons can not be used to assess the validity of a model, as it is unknown how distant these two models actually are; (2) hindcasting-validation is thrown into doubt, as it is unclear how much of these "data from the past" have already informed the current model version.
+
+        <small>For example, the 2018 drought wave in central Europe exposed an inability of forest growth models to trace the observed dynamics.<sup class="cite-ref" data-cite="XXX"></sup> In response, forest growth modelling groups updapted the process descriptions in their model (pers. comm.). If now the 2018 observations can be approximated by hindcasting, this is <i>not</i> a proper validation, as the data have already been used to inform the model formulation or parameterisation.</small>
+
+        General references: <sup class="cite-ref" data-cite="Roberts 2017"></sup> <sup class="cite-ref" data-cite="Cerqueira 2020"></sup>
+
         IMPORTANT 🔔 Validation needs to be planned: split data into MANY subsets.
         LINK long-term-planning
 
-      >>> Documentation of model: code, development, unit testing, validation, usage #documentation-model
+      >>> 📝 Documentation of model: code, development, unit testing, validation, usage #documentation-model
         Documentation serves transparency of the science and use of the model. LLMs may be usefully employed to support documentation (particularly of code and use). In some fields, documentation standards exist (e.g. ODD<sup class="cite-ref" data-cite="Grimm 2010"></sup>; TRACE<sup class="cite-ref" data-cite="Schmolke 2010"></sup>).
 
         <ol>
