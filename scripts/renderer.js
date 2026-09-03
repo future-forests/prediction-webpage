@@ -122,8 +122,8 @@ function renderSubItems(items, bgWhite){
   var html='<ul class="sub-list">';
   for(var i=0;i<items.length;i++){
     var s=items[i], subLeafId=s.id||('item-'+i);
-    html+='<li><div class="sub-item" '+(bgWhite?'style="background:var(--parchment)"':'')+'>';
-    html+='<span class="si-icon">'+s.icon+'</span>';
+    html+='<li><div class="sub-item" id="'+escapeAttr(subLeafId)+'" '+(bgWhite?'style="background:var(--parchment)"':'')+'>';
+    if(s.icon) html+='<span class="si-icon">'+s.icon+'</span>';
     html+='<div class="si-body">';
     html+='<div class="si-name">'+s.name+renderRoleTag(s.role)+'</div>';
     if(!isPlaceholder(s.desc)) html+='<div class="si-desc">'+renderRichText(s.desc)+'</div>';

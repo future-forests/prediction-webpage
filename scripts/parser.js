@@ -12,8 +12,23 @@ function parseContent(raw) {
   function trimVal(s){ return s.replace(/^\s+|\s+$/g,''); }
   function colorFor(num){ return ['c1','c2','c3','c4','c5'][num-1]||'c1'; }
   function splitDefinedId(text){
-    var match=text.match(/^(.*?)(?:\s+#([a-z0-9\-]+))?\s*$/);
+    var match=text.match(/^(.*?)(?:\s+#([a-zA-Z0-9\-]+))?\s*$/);
     return { label:trimVal(match?match[1]:text), id:match&&match[2]?match[2]:'' };
+  }
+
+  function isSubItemIcon(token){
+    if(!token) return false;
+    if(/^&(?:#\d+|#x[\da-f]+|[a-z]+);$/i.test(token)) return true;
+    if(/^[A-Za-z]/.test(token)) return false;
+    return true;
+  }
+
+  function parseSubItemRaw(sRaw){
+    var iconMatch=sRaw.match(/^(\S+)\s+(.*)$/);
+    if(iconMatch&&isSubItemIcon(iconMatch[1])){
+      return { icon:iconMatch[1], namePart:trimVal(iconMatch[2]) };
+    }
+    return { icon:'', namePart:sRaw };
   }
 
   var FIELD_KEYS={
@@ -64,7 +79,7 @@ function parseContent(raw) {
       continue;
     }
     if(line.indexOf('## ')===0){
-      section=trimVal(line.slice(3));
+      section=trimVal(line.slice(3)).replace(/\s+#.*$/,'').toUpperCase();
       curPhase=null; curNode=null; curSub=null; curField=null;
       continue;
     }
@@ -88,21 +103,34 @@ function parseContent(raw) {
       continue;
     }
     if(line.indexOf('>>> ')===0){
+      if(section==='CHECKLIST'){
+        var cp=trimVal(line.slice(4)).split('|');
+        var itemMeta=splitDefinedId(trimVal(cp[0]));
+        var lm=cp[1]&&trimVal(cp[1]).match(/LINK\s+(\S+)/);
+        result.checklist.push({text:itemMeta.label,link:lm?lm[1]:(itemMeta.id||null)});
+        continue;
+      }
       flush();
-      var sRaw=trimVal(line.slice(4)), iconMatch=sRaw.match(/^(\S+)\s+(.*)/);
-      var subMeta=splitDefinedId(iconMatch?trimVal(iconMatch[2]):sRaw);
+      var subParts=parseSubItemRaw(trimVal(line.slice(4)));
+      var subMeta=splitDefinedId(subParts.namePart);
       var subId=subMeta.id||('sub-item-'+((curNode&&curNode.subItems)?curNode.subItems.length+1:1));
-      curSub={id:subId,icon:iconMatch?iconMatch[1]:'',name:subMeta.label,role:null,desc:''};
+      curSub={id:subId,icon:subParts.icon,name:subMeta.label,role:null,desc:''};
       if(curNode) curNode.subItems.push(curSub);
       curField='sub-desc';
       continue;
     }
     if((line.indexOf('ROLE ')===0||line==='ROLE')&&(curSub||curNode||curPhase)){
       var roleValue=line==='ROLE'?'':trimVal(line.slice(5));
-      if(curSub) curSub.role=roleValue;
-      else if(curNode) curNode.role=roleValue;
-      else curPhase.role=roleValue;
-      flush();
+      if(curSub){
+        curSub.role=roleValue;
+        curField='sub-desc';
+      }else if(curNode){
+        curNode.role=roleValue;
+        flush();
+      }else{
+        curPhase.role=roleValue;
+        flush();
+      }
       continue;
     }
     if((line.indexOf('RATIONALE ')===0||line==='RATIONALE')&&curPhase&&!curNode){
@@ -143,8 +171,14 @@ function parseContent(raw) {
       continue;
     }
     if(section==='CHECKLIST'){
-      var cp=line.split('|'), lm=cp[1]&&trimVal(cp[1]).match(/LINK\s+(\S+)/);
-      result.checklist.push({text:trimVal(cp[0]),link:lm?lm[1]:null});
+      if(line.indexOf('|')>-1){
+        var cp=line.split('|');
+        var itemMeta=splitDefinedId(trimVal(cp[0]));
+        var lm=cp[1]&&trimVal(cp[1]).match(/LINK\s+(\S+)/);
+        result.checklist.push({text:itemMeta.label,link:lm?lm[1]:(itemMeta.id||null)});
+      }else if(result.checklist.length){
+        result.checklist[result.checklist.length-1].text+=' '+line;
+      }
       continue;
     }
     if(!isKeyword(line)&&curField&&appendToCurrentField(line)) continue;

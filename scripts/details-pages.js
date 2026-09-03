@@ -43,8 +43,7 @@ function bindDetailOverlayLinks(container){
       return;
     }
     closeDetailOverlay();
-    target.scrollIntoView({ behavior:'smooth', block:'start' });
-    if(typeof revealCollapsedForSearch==='function') revealCollapsedForSearch(target);
+    navigateToInPageTarget(hash);
   });
 }
 

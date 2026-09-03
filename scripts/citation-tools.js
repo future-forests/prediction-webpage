@@ -114,9 +114,18 @@
   }
 
   function getBiblio(opts){
-    if(opts&&opts.biblio) return opts.biblio;
-    if(opts&&opts.biblioGlobal&&window[opts.biblioGlobal]) return window[opts.biblioGlobal];
-    return {};
+    var bib={};
+    if(opts&&opts.biblio) bib=opts.biblio;
+    else if(opts&&opts.biblioGlobal&&window[opts.biblioGlobal]) bib=window[opts.biblioGlobal];
+    return normalizeBiblio(bib);
+  }
+
+  function normalizeBiblio(bib){
+    var out={};
+    for(var k in bib){
+      if(Object.prototype.hasOwnProperty.call(bib,k)) out[k.toLowerCase()]=bib[k];
+    }
+    return out;
   }
 
   function renderReferences(outEl, orderedKeys, bib, missingPrefix){
