@@ -5,16 +5,33 @@ function parseContent(raw) {
     raw=el?el.textContent:'';
   }
   var lines=raw.split('\n');
-  var result={ intro:[], glossary:[], checklist:[], phases:[] };
+  var result={ intro:[], glossary:[], bones:[], phases:[] };
   var section=null, curPhase=null, curNode=null, curSub=null, curField=null;
 
   function flush(){ curField=null; }
   function trimVal(s){ return s.replace(/^\s+|\s+$/g,''); }
   function colorFor(num){ return ['c1','c2','c3','c4','c5'][num-1]||'c1'; }
   function splitDefinedId(text){
-    var match=text.match(/^(.*?)(?:\s+#([a-z0-9\-]+))?\s*$/);
+    var match=text.match(/^(.*?)(?:\s+#([a-zA-Z0-9\-]+))?\s*$/);
     return { label:trimVal(match?match[1]:text), id:match&&match[2]?match[2]:'' };
   }
+
+  function isSubItemIcon(token){
+    if(!token) return false;
+    if(/^&(?:#\d+|#x[\da-f]+|[a-z]+);$/i.test(token)) return true;
+    if(/^[A-Za-z]/.test(token)) return false;
+    return true;
+  }
+
+  function parseSubItemRaw(sRaw){
+    var iconMatch=sRaw.match(/^(\S+)\s+(.*)$/);
+    if(iconMatch&&isSubItemIcon(iconMatch[1])){
+      return { icon:iconMatch[1], namePart:trimVal(iconMatch[2]) };
+    }
+    return { icon:'', namePart:sRaw };
+  }
+
+  function isBonesSection(name){ return name==='BONES OF CONTENTION'; }
 
   var FIELD_KEYS={
     rationale:'rationale',
@@ -22,14 +39,33 @@ function parseContent(raw) {
     'text-after':'bodyAfter',
     example:'example',
     important:'important',
-    'sub-desc':'desc'
+    'sub-desc':'desc',
+    'bones-desc':'desc'
   };
 
   function fieldTarget(){
     if(curField==='rationale') return curPhase&&!curNode?curPhase:null;
     if(curField==='text'||curField==='text-after'||curField==='example'||curField==='important') return curNode;
     if(curField==='sub-desc') return curSub;
+    if(curField==='bones-desc'&&result.bones.length) return result.bones[result.bones.length-1];
     return null;
+  }
+
+  function parseBonesJump(pipeTail){
+    var m=pipeTail&&trimVal(pipeTail).match(/JUMP\s+(\S+)/);
+    return m?m[1]:null;
+  }
+
+  function pushBonesItem(namePart, pipeTail){
+    var itemMeta=splitDefinedId(namePart);
+    var itemId=itemMeta.id||('bone-'+(result.bones.length+1));
+    result.bones.push({
+      id:itemId,
+      icon:'',
+      name:itemMeta.label,
+      desc:'',
+      jump:parseBonesJump(pipeTail)
+    });
   }
 
   function appendToCurrentField(line){
@@ -64,7 +100,7 @@ function parseContent(raw) {
       continue;
     }
     if(line.indexOf('## ')===0){
-      section=trimVal(line.slice(3));
+      section=trimVal(line.slice(3)).replace(/\s+#.*$/,'').toUpperCase();
       curPhase=null; curNode=null; curSub=null; curField=null;
       continue;
     }
@@ -88,21 +124,44 @@ function parseContent(raw) {
       continue;
     }
     if(line.indexOf('>>> ')===0){
+      if(isBonesSection(section)){
+        flush();
+        var cp=trimVal(line.slice(4)).split('|');
+        var subParts=parseSubItemRaw(trimVal(cp[0]));
+        var itemMeta=splitDefinedId(subParts.namePart);
+        var lm=cp[1]&&trimVal(cp[1]).match(/JUMP\s+(\S+)/);
+        var itemId=itemMeta.id||('bone-'+(result.bones.length+1));
+        result.bones.push({
+          id:itemId,
+          icon:subParts.icon,
+          name:itemMeta.label,
+          desc:'',
+          jump:lm?lm[1]:null
+        });
+        curField='bones-desc';
+        continue;
+      }
       flush();
-      var sRaw=trimVal(line.slice(4)), iconMatch=sRaw.match(/^(\S+)\s+(.*)/);
-      var subMeta=splitDefinedId(iconMatch?trimVal(iconMatch[2]):sRaw);
+      var subParts=parseSubItemRaw(trimVal(line.slice(4)));
+      var subMeta=splitDefinedId(subParts.namePart);
       var subId=subMeta.id||('sub-item-'+((curNode&&curNode.subItems)?curNode.subItems.length+1:1));
-      curSub={id:subId,icon:iconMatch?iconMatch[1]:'',name:subMeta.label,role:null,desc:''};
+      curSub={id:subId,icon:subParts.icon,name:subMeta.label,role:null,desc:'',xlinks:[]};
       if(curNode) curNode.subItems.push(curSub);
       curField='sub-desc';
       continue;
     }
     if((line.indexOf('ROLE ')===0||line==='ROLE')&&(curSub||curNode||curPhase)){
       var roleValue=line==='ROLE'?'':trimVal(line.slice(5));
-      if(curSub) curSub.role=roleValue;
-      else if(curNode) curNode.role=roleValue;
-      else curPhase.role=roleValue;
-      flush();
+      if(curSub){
+        curSub.role=roleValue;
+        curField='sub-desc';
+      }else if(curNode){
+        curNode.role=roleValue;
+        flush();
+      }else{
+        curPhase.role=roleValue;
+        flush();
+      }
       continue;
     }
     if((line.indexOf('RATIONALE ')===0||line==='RATIONALE')&&curPhase&&!curNode){
@@ -131,9 +190,15 @@ function parseContent(raw) {
       curField='important';
       continue;
     }
-    if(line.indexOf('LINK ')===0&&curNode){
-      curNode.xlinks.push(trimVal(line.slice(5)));
-      flush();
+    if(line.indexOf('LINK ')===0&&(curSub||curNode)){
+      var linkTarget=trimVal(line.slice(5));
+      if(curSub){
+        curSub.xlinks.push(linkTarget);
+        curField='sub-desc';
+      }else{
+        curNode.xlinks.push(linkTarget);
+        flush();
+      }
       continue;
     }
     if(section==='INTRO'){ result.intro.push(line); curField='intro'; continue; }
@@ -142,9 +207,16 @@ function parseContent(raw) {
       if(gp.length>=2) result.glossary.push({term:trimVal(gp[0]),def:trimVal(gp[1])});
       continue;
     }
-    if(section==='CHECKLIST'){
-      var cp=line.split('|'), lm=cp[1]&&trimVal(cp[1]).match(/LINK\s+(\S+)/);
-      result.checklist.push({text:trimVal(cp[0]),link:lm?lm[1]:null});
+    if(isBonesSection(section)){
+      if(line.indexOf('|')>-1){
+        flush();
+        var cp=line.split('|');
+        pushBonesItem(trimVal(cp[0]),cp[1]);
+      }else if(curField==='bones-desc'&&appendToCurrentField(line)){
+        /* appended to desc */
+      }else if(result.bones.length){
+        result.bones[result.bones.length-1].name+=' '+line;
+      }
       continue;
     }
     if(!isKeyword(line)&&curField&&appendToCurrentField(line)) continue;

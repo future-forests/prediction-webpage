@@ -15,12 +15,12 @@ window.BASIS_BIBLIO={
   'Dormann 2026':'Dormann, C. F., Kaber, Y., & Hartig, F. (2026). Full prediction uncertainty quantification: A plea from science and decision making. In Advances in Ecological Research (Vol. 74, pp. 191-212). Elsevier. https://doi.org/10.1016/bs.aecr.2026.02.003',
   'Farmer 2024':'Farmer, J. D. (2024). Making Sense of Chaos: A Better Economics for a Better World. Yale University Press.',
   'Getz 2018':'Getz, W. M., Marshall, C. R., Carlson, C. J., Giuggioli, L., Ryan, S. J., Romanach, S. S., Boettiger, C., Chamberlain, S. D., Larsen, L., D\'Odorico, P., & O\'Sullivan, D. (2018). Making ecological models adequate. Ecology Letters, 21(2), 153-166. https://doi.org/10.1111/ele.12893',
-  'Grimm 2005': 'Grimm, V., Revilla, E., Berger, U., Jeltsch, F., Mooij, W. M., Railsback, S. F. 6, Thulke, H. H., Weiner, J., Wiegand, T., & DeAngelis, D. L. (2005). Pattern-oriented modeling of agent-based complex systems: Lessons from ecology. Science, 310, 987-991.',
+  'Grimm 2005': 'Grimm, V., Revilla, E., Berger, U., Jeltsch, F., Mooij, W. M., Railsback, S. F., Thulke, H. H., Weiner, J., Wiegand, T., & DeAngelis, D. L. (2005). Pattern-oriented modeling of agent-based complex systems: Lessons from ecology. Science, 310, 987-991.',
   'Grimm 2010':'Grimm, V., Berger, U., DeAngelis, D. L., Polhill, J. G., Giske, J., & Railsback, S. F. (2010). The ODD protocol: A review and first update. Ecological Modelling, 221(23), 2760-2768. https://doi.org/10.1016/j.ecolmodel.2010.08.019',
   'Hastie 2009':'Hastie, T., Tibshirani, R. J., & Friedman, J. H. (2009). The Elements of Statistical Learning: Data Mining, Inference, and Prediction (2nd ed.). Springer.',
   'Hyndman 2021':'Hyndman, R. J., & Athanasopoulos, G. (2021). Forecasting: Principles and Practice (3rd ed.). OTexts. https://otexts.com/fpp3/',
   'Kaye 2012':'Kaye, N. R., Hartley, A., & Hemming, D. (2012). Mapping the climate: Guidance on appropriate techniques to map climate variables and their uncertainty. Geoscientific Model Development, 5(1), 245-256. https://doi.org/10.5194/gmd-5-245-2012',
-  'Luo 2009 ': 'Luo, Y., Weng, E., Wu, X., Gao, C., Zhou, X., & Zhang, L. (2009). Parameter identifiability, constraint, and equifinality in data assimilation with ecosystem models. Ecological Applications, 19(3), 571–574.',
+  'Luo 2009': 'Luo, Y., Weng, E., Wu, X., Gao, C., Zhou, X., & Zhang, L. (2009). Parameter identifiability, constraint, and equifinality in data assimilation with ecosystem models. Ecological Applications, 19(3), 571–574.',
   'Lux 2023': 'Lux, T. (2023). Approximate Bayesian inference for agent-based models in economics: A case study. Studies in Nonlinear Dynamics & Econometrics, 27(4), 423-447. https://doi.org/10.1515/snde-2021-0052',
   'Marjoram 2003':'Marjoram, P., Molitor, J., Plagnol, V., & Tavare, S. (2003). Markov chain Monte Carlo without likelihoods. Proceedings of the National Academy of Sciences, 100(26), 15324-15328. https://doi.org/10.1073/pnas.0306899100',
   'Matheson 1976':'Matheson, J. E., & Winkler, R. L. (1976). Scoring rules for continuous probability distributions. Management Science, 22(10), 1087-1096. https://doi.org/10.1287/mnsc.22.10.1087',
@@ -40,5 +40,3 @@ window.BASIS_BIBLIO={
   'Wolter 2007':'Wolter, K. M. (2007). Introduction to Variance Estimation (2nd ed.). Springer.',
   'Wood 2010': 'Wood, S. N. (2010). Statistical inference for noisy nonlinear ecological dynamic systems. Nature, 466, 1102-1104. https://doi.org/10.1038/nature09319'
 };
-
-window.MODEL_INVERSION_BIBLIO=window.BASIS_BIBLIO;

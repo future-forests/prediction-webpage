@@ -1,14 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<link rel="stylesheet" href="../basis.css">
-<title>Orientation: Setting the stage</title>
-</head>
-<body class="detail-page">
+TITLE: Orientation: Setting the stage
 
- <b>Key questions</b>
+<b>Key questions</b>
 
 <em>Purpose:</em> Why is the prediction needed, who will use it, and what decision or action will it inform?
 
@@ -19,7 +11,3 @@
 <em>Performance requirements:</em> What level of accuracy and uncertainty is acceptable for the intended application?
 
 <em>Assumptions and scope:</em> What simplifying assumptions are necessary, and how might they affect the interpretation and applicability of the predictions?
-
-
-</body>
-</html>

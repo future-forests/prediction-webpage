@@ -1,50 +1,86 @@
-// Detail page overlay — pages live at details/{id}.html, matching each #id in basis.html.
-function typesetDetailFrame(doc){
-  if(!doc||!doc.body) return;
-  var win=doc.defaultView;
-  if(win.MathJax&&win.MathJax.typesetPromise){
-    win.MathJax.typesetPromise([doc.body]);
-    return;
+// Detail page overlay — content lives at details/{id}.txt, matching each #id in basis.html.
+
+function hidePlaceholderDetailButtons(){
+  var buttons=document.querySelectorAll('.more-details-btn[data-detail-id]');
+  var seen={};
+  for(var i=0;i<buttons.length;i++){
+    (function(id){
+      if(!id||seen[id]) return;
+      seen[id]=true;
+      loadDetail(id).then(function(raw){
+        if(!isDetailPlaceholder(raw)) return;
+        var matches=document.querySelectorAll('.more-details-btn[data-detail-id="'+id+'"]');
+        for(var j=0;j<matches.length;j++){
+          var row=matches[j].closest('.details-row');
+          if(row) row.hidden=true;
+          else matches[j].hidden=true;
+        }
+      });
+    })(buttons[i].getAttribute('data-detail-id'));
   }
-  var s=doc.createElement('script');
-  s.src='https://cdn.jsdelivr.net/npm/mathjax@4/tex-mml-chtml.js';
-  s.onload=function(){
-    if(win.MathJax&&win.MathJax.typesetPromise) win.MathJax.typesetPromise([doc.body]);
-  };
-  doc.head.appendChild(s);
 }
 
-function openDetailOverlay(page, title){
+function handleDetailOverlayEscape(e){
+  if(e.key!=='Escape') return;
   var dialog=document.getElementById('detail-overlay');
-  var frame=document.getElementById('detail-overlay-frame');
+  if(!dialog||!dialog.open) return;
+  e.preventDefault();
+  closeDetailOverlay();
+}
+
+function bindDetailOverlayLinks(container){
+  if(!container) return;
+  container.addEventListener('click',function(e){
+    var link=e.target.closest&&e.target.closest('a[href^="#"]');
+    if(!link) return;
+    var hash=link.getAttribute('href');
+    if(!hash||hash==='#') return;
+    var target=document.querySelector(hash);
+    if(!target) return;
+    e.preventDefault();
+    if(container.contains(target)){
+      target.scrollIntoView({ behavior:'smooth', block:'start' });
+      return;
+    }
+    closeDetailOverlay();
+    navigateToInPageTarget(hash);
+  });
+}
+
+function openDetailOverlay(id, fallbackTitle){
+  var dialog=document.getElementById('detail-overlay');
+  var bodyEl=document.getElementById('detail-overlay-body');
   var titleEl=document.getElementById('detail-overlay-title');
-  if(!dialog||!frame){
-    window.location.href=page;
+  if(!dialog||!bodyEl){
+    window.location.href='details/page.html?id='+encodeURIComponent(id);
     return;
   }
 
-  if(titleEl){
-    titleEl.textContent='More details: '+(title||'');
-  }
-  frame.onload=function(){
-    try{
-      var doc=frame.contentDocument;
-      if(!doc||!doc.body) return;
-      doc.body.classList.add('embedded-detail');
-      typesetDetailFrame(doc);
-    }catch(err){}
-  };
-  frame.src=page;
+  bodyEl.innerHTML='<p style="color:var(--ink-muted);font-style:italic">Loading…</p>';
+  if(titleEl) titleEl.textContent='More details: '+(fallbackTitle||'');
   document.body.classList.add('detail-overlay-open');
 
   if(typeof dialog.showModal==='function') dialog.showModal();
   else dialog.setAttribute('open','open');
+
+  loadDetail(id).then(function(raw){
+    if(isDetailPlaceholder(raw)){
+      bodyEl.innerHTML='<p style="color:var(--ink-muted);font-style:italic">No detail content available yet.</p>';
+      return;
+    }
+    var title=mountDetail({
+      raw:raw,
+      target:bodyEl,
+      fallbackTitle:fallbackTitle
+    });
+    if(titleEl&&title) titleEl.textContent='More details: '+title;
+  });
 }
 
 function closeDetailOverlay(){
   var dialog=document.getElementById('detail-overlay');
-  var frame=document.getElementById('detail-overlay-frame');
-  if(frame) frame.src='about:blank';
+  var bodyEl=document.getElementById('detail-overlay-body');
+  if(bodyEl) bodyEl.innerHTML='';
   if(dialog&&dialog.open){
     dialog.close();
   }else if(dialog){
@@ -53,25 +89,33 @@ function closeDetailOverlay(){
   document.body.classList.remove('detail-overlay-open');
 }
 
-document.addEventListener('keydown',function(e){
-  if(e.key==='Escape') closeDetailOverlay();
-});
+document.addEventListener('keydown',handleDetailOverlayEscape);
 
 document.addEventListener('DOMContentLoaded',function(){
+  var bodyEl=document.getElementById('detail-overlay-body');
+  if(bodyEl) bindDetailOverlayLinks(bodyEl);
   var dialog=document.getElementById('detail-overlay');
-  if(!dialog) return;
-  dialog.addEventListener('click',function(e){
-    if(e.target===dialog) closeDetailOverlay();
-  });
-  dialog.addEventListener('close',function(){
-    document.body.classList.remove('detail-overlay-open');
-    var frame=document.getElementById('detail-overlay-frame');
-    if(frame) frame.src='about:blank';
+  if(dialog){
+    dialog.addEventListener('click',function(e){
+      if(e.target===dialog) closeDetailOverlay();
+    });
+    dialog.addEventListener('close',function(){
+      document.body.classList.remove('detail-overlay-open');
+      var bodyEl=document.getElementById('detail-overlay-body');
+      if(bodyEl) bodyEl.innerHTML='';
+    });
+    dialog.addEventListener('cancel',function(e){
+      e.preventDefault();
+      closeDetailOverlay();
+    });
+  }
+  document.addEventListener('basis-rendered',function(){
+    hidePlaceholderDetailButtons();
   });
 });
 
 document.addEventListener('click',function(e){
-  var btn=e.target.closest&&e.target.closest('.more-details-btn[data-detail-page]');
+  var btn=e.target.closest&&e.target.closest('.more-details-btn[data-detail-id]');
   if(!btn) return;
   e.preventDefault();
   var title=btn.getAttribute('data-detail-title')||'';
@@ -87,5 +131,5 @@ document.addEventListener('click',function(e){
       }
     }
   }
-  openDetailOverlay(btn.getAttribute('data-detail-page'),title);
+  openDetailOverlay(btn.getAttribute('data-detail-id'),title);
 });

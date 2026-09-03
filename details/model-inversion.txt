@@ -1,0 +1,61 @@
+TITLE: Orientation: Model Inversion
+
+Model inversion describes the estimation of model parameters from data and a defined measure of fit <a id="footnote-1-ref" href="#footnote-1"><sup class="footnote-ref"></sup></a>. Common examples include parameter estimation in engineering, geophysics (infer Earth properties from seismic data), remote sensing (infer land/atmosphere properties from satellite observations), and data assimilation in weather/climate, or for that matter <a href="https://www.youtube.com/watch?v=Y5TFSvE-lpg">cosmology</a>.
+
+## Reasons why
+
+Model inversion serves (at least) two purposes in the context of predictions: (1) to improve the parameterisation of a model for the case study at hand; and (2) identify structural problems with the model.
+
+### Improve <a href=#parameterisation>parameterisation</a>
+
+<b>Field different from lab</b>: Process-based models are developed with a specific question and/or system in mind. The majority of model parameters will be extracted from measurements in the lab or field (think: temperature-dependence of photosynthesis, water infiltration rate, flight speed of bat). However, for any given system, these parameters are unlikely to be the best possible (field is not lab: a different plant species, different soil density, different bat species).
+
+<b>Discretisation problems</b>: Another issue with respect to model parameterised with data from previous studies is that quite often those measurements have been performed at a different scale than what is modelled. For example, leaf-level measures of leaf conductivity are different from stand-level model parameterisation of leaf-conductivity: the scales are different. Also, often spatial models run on grids ("lattice") even for space-continuous processes (such as dispersal). Such spatial discretisation may preclude using continuous parameters and rather may require re-formulating the process parameters.<sup class="cite-ref" data-cite="Chipperfield 2011"></sup>
+
+Smaller, or larger, changes of the default parameterisation will in most cases improve both fit to the local observations as well as prediction within that system. Hence, we can hope to gain a reduction in prediction bias by inverse modelling.
+
+### Identifying structural problems
+
+Model parameters typically have a mechanistic interpretation (think: the rate of photosynthesis at optimal conditions). As such, they have values that have been measured in experiments and a value range that we expect (think: mortality is between 0 and 1).
+
+The optimiser that fits the model to data can be told within which range to find suitable parameters (see below for details), either as upper/lower bound or as probability distribution (potentially extending to \(\pm \infty\)). Now, when during model inversion the best parameter estimate hits the boundary, or leaves the range of "permissible" values, we may treat that as a clear signal that "something is wrong". That something may be the specific function fitted, or a combination of modules within a model, either of which may be subsumed as "model structure" (sometimes also referred to as "model logic").
+
+## Techniques
+
+Here we discuss the most formal way of model inversion by changing model parameters \(\theta\) so as to minimise (some measure of) the distance \(d\) between model prediction \(\hat{y}_i\) and observation \(y_i\): \(\arg \min_\theta d(\hat{y}_i - y_i)\). In the simplest case, \(d = \sqrt{(\hat{y}_i - y_i)^2} \) = Euclidean distance, but many other measures are being used, in particular the negative log-likelihood. This makes the intimacy between model inversion and regression-like approaches clearest and shall hence briefly be explicated.
+
+Let us assume that the data can be considered as draws from a probability distribution:
+
+\( y \sim P(f(X, \theta)) \),
+
+where \(f(X, \theta) \) is our model, which turns input (predictor) variables \(X\) into model prediction \(\hat{y}\), using model parameters \(\theta\). Fundamentally, it does not matter whether \(f\) is a regression line of type \(\beta_0 + X\beta\), a stochastic partial differential equation or an agent/individual-based model.
+
+Then model inversion using log-likelihood means finding values of \( \theta \) that make the observations \(y\) most likely, or the negative log-likelihood minimal:
+
+\( \arg \min_\theta -\sum_i \log P(y_i \mid f(X_i, \theta)) \ \) <a id="footnote-2-ref" href="#footnote-2"><sup class="footnote-ref"></sup></a>
+
+The technical challenge is to find optimisation algorithms that find the optimal values of \(\theta\) for complicated models \( f \) (think: stochastic models without analytical likelihood;<sup class="cite-ref" data-cite="Marjoram 2003"></sup> very slow models where parameter evaluation becomes very costly; heavily over-parameterised models, where data cannot identify parameters, a.k.a. "equifinality";<sup class="cite-ref" data-cite="Luo 2009"></sup> multi-dimensional \(y\) of very different information content.<sup class="cite-ref" data-cite="Oberpriller 2021"></sup>)
+
+For example, consider a fishery model with a harvest module and a reproduction module. The input to the reproduction module is affected by the harvest module (e.g. number of reproductive female caught). If the harvest module gets the outtake of females wrong, then also the reproduction module will yield wrong results, as they are coupled. Now, when fitting the model to data, those may force the reproduction module to yield unrealistic high reproduction rates to compensate the wrong harvest module. This should raise a red flag to the model developer that something is structurally wrong.
+
+### Parameter priors and bounds
+
+Model parameters ideally have a physical/chemical/biological interpretation. As such they also typically have bounds of realism: a mortality rate has to be in [0, 1], a water inflitration rate has to be positive. Such parameter bounds can be used in optimisation, depending on the algorithm as upper/lower bounds (= box constraints, e.g. using <a href="https://en.wikipedia.org/wiki/Limited-memory_BFGS#L-BFGS-B">L-BFGS-B</a>) or as probability density function (as priors in Bayesian approaches).
+
+Parameter priors/bounds should not be taken lightly. Too narrow bounds may reduce the ability of the model to fit the data. Too wide bounds may lead to very inefficient optimisation. Also, in reality model parameters are correlated, while bounds and (univariate) priors only constrain them independently. This is not a fundamental problem, only makes sampling the parameter space less efficient.
+
+Most interesting, from a scientific point of view, are the situations when the data suggest parameters at the edge of the bounds or in the tails of the parameter priors. As pointed out above, this suggests structural errors or mismatches.
+
+### Optimisation algorithms
+
+In the simplest case, a model can be inverted using optimisation (e.g. quasi-Newton approaches, or Nelder-Mead). Already as slightly more complex models, stochastic approaches become more efficient at evaluting the large parameter space (e.g. Genetic Algorithms, Stochastic Gradient Descent). Very robust, but also relatively inefficient, are MCMC-based approaches in a Bayesian framework.<sup class="cite-ref" data-cite="Dietze 2017"></sup>
+
+When the model itself is stochastic, optimisation becomes even more complicated, as the same parameter combination will yield different estimates of \(\hat{y}\). Such situations are addressed by Approximate Bayesian Computation<sup class="cite-ref" data-cite="Sisson 2018"></sup> or synthetic likelihood.<sup class="cite-ref" data-cite="Wood 2010"></sup> These approaches are still developing, also under the title of "pattern-oriented modelling"<sup class="cite-ref" data-cite="Grimm 2005"></sup>, and deep-learning approaches may additionally make parameter estimation more efficient.<sup class="cite-ref" data-cite="Baragatti 2026"></sup>
+
+---
+
+Footnotes
+
+<p id="footnote-1"><span class="footnote-label"></span> Depending on the research field, this activity goes by "fitting", "calibration", "tuning", "parameterisation", "backwards modelling", each with slightly different meaning and goal. <a href="#footnote-1-ref">&#8617;</a></p>
+
+<p id="footnote-2"><span class="footnote-label"></span> For example, if our individual-based model predicts the number of cuckoos in some landscape, then, assuming those to be represented by a Poisson distribution, we have: \(\text{number of cuckoos} \sim \text{Pois}(\lambda=\text{IBM}(X, \theta))\). The IBM also has the job of ensuring only valid values of \(\lambda\), allowing us to omit the link-function of a GLM. <a href="#footnote-2-ref">&#8617;</a></p>

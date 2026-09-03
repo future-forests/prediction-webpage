@@ -9,11 +9,10 @@ function escapeAttr(value){
     .replace(/>/g,'&gt;');
 }
 
-function isPlaceholder(text){ return !text||text.trim()==='[text]'; }
+function isPlaceholder(text){ return !text||text.trim()===''||text.trim()==='[text]'; }
 
 function renderDetailsButton(leafId, title){
-  var page='details/'+leafId+'.html';
-  return '<div class="details-row"><button class="more-details-btn" type="button" data-detail-page="'+escapeAttr(page)+'" data-detail-title="'+escapeAttr(title||leafId)+'">More details</button></div>';
+  return '<div class="details-row"><button class="more-details-btn" type="button" data-detail-id="'+escapeAttr(leafId)+'" data-detail-title="'+escapeAttr(title||leafId)+'">More details</button></div>';
 }
 
 function hasBlockHtml(text){
@@ -30,16 +29,80 @@ function renderRichText(text){
   return chunks.map(function(part){ return '<p>'+part+'</p>'; }).join('');
 }
 
-function renderRoleTag(role){
-  return role?'<span class="role-tag">'+escapeAttr(role)+'</span>':'';
+function renderDetailContent(raw){
+  if(raw==null) return '';
+  var lines=raw.split('\n');
+  var html='';
+  var curField=null;
+  var curText='';
+
+  function trimVal(s){ return s.replace(/^\s+|\s+$/g,''); }
+
+  function flushField(){
+    if(!curText){
+      curField=null;
+      return;
+    }
+    if(curField==='example'){
+      html+='<div class="example">'+renderRichText(curText)+'</div>';
+    }else if(curField==='important'){
+      html+='<div class="important">'+renderRichText(curText)+'</div>';
+    }else{
+      html+=renderRichText(curText);
+    }
+    curText='';
+    curField=null;
+  }
+
+  function appendLine(line){
+    if(!curText) curText=line;
+    else if(curField==='example'||curField==='important') curText+=' '+line;
+    else curText+='\n\n'+line;
+  }
+
+  for(var i=0;i<lines.length;i++){
+    var line=trimVal(lines[i]);
+    if(line===''){
+      if(curField==='example'||curField==='important') curText+='\n\n';
+      else if(curText) curText+='\n\n';
+      continue;
+    }
+    if(line==='---'){
+      flushField();
+      html+='<hr>';
+      continue;
+    }
+    if(line.indexOf('## ')===0){
+      flushField();
+      html+='<h2>'+trimVal(line.slice(3))+'</h2>';
+      continue;
+    }
+    if(line.indexOf('### ')===0){
+      flushField();
+      html+='<h3>'+trimVal(line.slice(4))+'</h3>';
+      continue;
+    }
+    if(line.indexOf('EXAMPLE ')===0||line==='EXAMPLE'){
+      flushField();
+      curText=line==='EXAMPLE'?'':'<strong>'+trimVal(line.slice(8))+'</strong>';
+      curField='example';
+      continue;
+    }
+    if(line.indexOf('IMPORTANT ')===0||line==='IMPORTANT'){
+      flushField();
+      curText=line==='IMPORTANT'?'':'<strong>'+trimVal(line.slice(10))+'</strong>';
+      curField='important';
+      continue;
+    }
+    if(!curField) curField='body';
+    appendLine(line);
+  }
+  flushField();
+  return html;
 }
 
-function renderXlinks(xlinks){
-  var html='';
-  for(var x=0;x<xlinks.length;x++){
-    html+='<div class="xlink">&#8596; <strong>Cross-phase:</strong> <a href="#'+xlinks[x]+'">Jump &rarr;</a></div>';
-  }
-  return html;
+function renderRoleTag(role){
+  return role?'<span class="role-tag">'+escapeAttr(role)+'</span>':'';
 }
 
 function renderOptionalBlock(text, className){
@@ -51,8 +114,8 @@ function renderSubItems(items, bgWhite){
   var html='<ul class="sub-list">';
   for(var i=0;i<items.length;i++){
     var s=items[i], subLeafId=s.id||('item-'+i);
-    html+='<li><div class="sub-item" '+(bgWhite?'style="background:var(--parchment)"':'')+'>';
-    html+='<span class="si-icon">'+s.icon+'</span>';
+    html+='<li><div class="sub-item" id="'+escapeAttr(subLeafId)+'" '+(bgWhite?'style="background:var(--parchment)"':'')+'>';
+    if(s.icon) html+='<span class="si-icon">'+s.icon+'</span>';
     html+='<div class="si-body">';
     html+='<div class="si-name">'+s.name+renderRoleTag(s.role)+'</div>';
     if(!isPlaceholder(s.desc)) html+='<div class="si-desc">'+renderRichText(s.desc)+'</div>';
@@ -71,7 +134,6 @@ function renderNodeBody(node){
     +renderDetailsButton(node.id,node.title)
     +renderSubItems(node.subItems,false)
     +(isPlaceholder(node.bodyAfter)?'':renderRichText(node.bodyAfter))
-    +renderXlinks(node.xlinks)
     +renderOptionalBlock(node.example,'example')
     +renderOptionalBlock(node.important,'important');
 }
@@ -124,11 +186,19 @@ function renderGlossary(entries){
   return html;
 }
 
-function renderChecklist(items){
-  var html='';
+function renderBones(items){
+  if(!items||!items.length) return '';
+  var html='<ul class="sub-list bones-list">';
   for(var i=0;i<items.length;i++){
-    var jump=items[i].link?' <a href="#'+items[i].link+'" class="checklist-jump">&rarr;</a>':'';
-    html+='<div class="checklist-item"><span class="checklist-icon">&#128276;</span><span>'+items[i].text+jump+'</span></div>';
+    var s=items[i], leafId=s.id||('bone-'+i);
+    html+='<li><div class="sub-item" id="'+escapeAttr(leafId)+'">';
+    if(s.icon) html+='<span class="si-icon">'+s.icon+'</span>';
+    html+='<div class="si-body">';
+    var jump=s.jump?' <a href="#'+escapeAttr(s.jump)+'" class="bones-jump">&rarr;</a>':'';
+    html+='<div class="si-name">'+s.name+jump+'</div>';
+    if(!isPlaceholder(s.desc)) html+='<div class="si-desc">'+renderRichText(s.desc)+'</div>';
+    html+=renderDetailsButton(leafId,s.name);
+    html+='</div></div></li>';
   }
-  return html;
+  return html+'</ul>';
 }
