@@ -465,18 +465,6 @@ body > p[id^="footnote-"] .footnote-label{
   color:var(--amber);
 }
 
-/* ── CROSS-LINKS ─────────────────────────────────────────── */
-.xlink{
-  display:none;margin:8px 0 0;padding:7px 11px;
-  background:#fffbf0;border:1px dashed var(--amber);
-  border-radius:6px;font-size:.78rem;color:#7a4f10;line-height:1.5;
-  width:50%;
-  margin-left:auto;
-  text-align:center;
-}
-.xlink a{color:var(--amber);font-weight:600;text-decoration:none}
-.xlink a:hover{text-decoration:underline}
-body.show-links .xlink{display:block}
 
 /* ── EXAMPLE & IMPORTANT ─────────────────────────────────── */
 .example{

@@ -105,14 +105,6 @@ function renderRoleTag(role){
   return role?'<span class="role-tag">'+escapeAttr(role)+'</span>':'';
 }
 
-function renderXlinks(xlinks){
-  var html='';
-  for(var x=0;x<xlinks.length;x++){
-    html+='<div class="xlink">&#8596; <strong>Cross-phase:</strong> <a href="#'+xlinks[x]+'">Jump &rarr;</a></div>';
-  }
-  return html;
-}
-
 function renderOptionalBlock(text, className){
   return isPlaceholder(text)?'':'<div class="'+className+'">'+renderRichText(text)+'</div>';
 }
@@ -142,7 +134,6 @@ function renderNodeBody(node){
     +renderDetailsButton(node.id,node.title)
     +renderSubItems(node.subItems,false)
     +(isPlaceholder(node.bodyAfter)?'':renderRichText(node.bodyAfter))
-    +renderXlinks(node.xlinks)
     +renderOptionalBlock(node.example,'example')
     +renderOptionalBlock(node.important,'important');
 }

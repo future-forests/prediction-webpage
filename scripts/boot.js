@@ -129,10 +129,24 @@ function toggleSection(contentId, titleEl){
   setTimeout(drawConnectors,220);
 }
 
+function revealSectionTitle(titleEl){
+  if(!titleEl||!titleEl.classList.contains('sec-title')) return;
+  var secId=titleEl.getAttribute('data-sec');
+  if(!secId) return;
+  var content=document.getElementById(secId);
+  if(!content) return;
+  titleEl.classList.remove('collapsed');
+  content.classList.remove('sec-collapsed');
+  setFindHidden(content,false);
+}
+
 function navigateToInPageTarget(hash){
   if(!hash||hash==='#') return false;
   var target=document.querySelector(hash);
   if(!target) return false;
+  if(target.classList.contains('sec-title')&&target.getAttribute('data-sec')){
+    revealSectionTitle(target);
+  }
   revealCollapsedForSearch(target);
   target.scrollIntoView({ behavior:'smooth', block:'start' });
   return true;

@@ -27,6 +27,13 @@
       var t=node.xlinks[x];
       if(t&&t!==node.id) CONNECTOR_PAIRS.push({from:node.id,to:t});
     }
+    for(var s=0,sLen=node.subItems.length;s<sLen;s++){
+      var sub=node.subItems[s];
+      for(var y=0,yLen=(sub.xlinks||[]).length;y<yLen;y++){
+        var u=sub.xlinks[y];
+        if(u&&u!==sub.id) CONNECTOR_PAIRS.push({from:sub.id,to:u});
+      }
+    }
   }
 
   function isVisible(el){

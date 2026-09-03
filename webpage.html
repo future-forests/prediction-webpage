@@ -24,15 +24,15 @@
 
   FIELDS:
 
-    ROLE           Who is responsible; shown as a tag next to the title.
-                   Put it directly under === for a whole phase. One line.
-    RATIONALE      Why this phase exists; shown in the "Rationale" block at the top of the phase.
-                   Phase-level only — must come before the first --- of that phase.
-    TEXT           Card body text. Use before >>> sub-items and optionally again after them.
-    EXAMPLE        A highlighted example box at the bottom of the card.
-                   Text on the keyword line becomes the bold heading; lines below are normal text.
-    IMPORTANT      A highlighted warning box at the bottom of the card. Same heading/body rule as EXAMPLE.
-    LINK target-id Draws a cross-phase connector and a "Jump" link from this card to the card with that id.
+    ROLE            Who is responsible; shown as a tag next to the title.
+                    Put it directly under === for a whole phase. One line.
+    RATIONALE       Why this phase exists; shown in the "Rationale" block at the top of the phase.
+                    Phase-level only — must come before the first --- of that phase.
+    TEXT            Card body text. Use before >>> sub-items and optionally again after them.
+    EXAMPLE         A highlighted example box at the bottom of the card.
+                    Text on the keyword line becomes the bold heading; lines below are normal text.
+    IMPORTANT       A highlighted warning box at the bottom of the card. Same heading/body rule as EXAMPLE.
+    LINK target-id  Connector target on --- items or >>> sub-items ("Show cross-phase linkage" toggle).
 
   CITATIONS:
 
@@ -301,7 +301,7 @@ The quality of predictions is currently unknown due to lack of uncertainty quant
       >>> Validation #validation
         External validation is an honest estimate of prediction quality.
         IMPORTANT 🔔 Validation needs to be planned: split data into MANY subsets.
-        LINK long-term-plan
+        LINK long-term-planning
 
       >>> Documentation of model: code, development, unit testing, validation, usage #documentation-model
         Documentation serves transparency of the science and use of the model. LLMs may be usefully employed to support documentation (particularly of code and use). In some fields, documentation standards exist (e.g. ODD<sup class="cite-ref" data-cite="Grimm 2010"></sup>; TRACE<sup class="cite-ref" data-cite="Schmolke 2010"></sup>).
@@ -346,7 +346,7 @@ The quality of predictions is currently unknown due to lack of uncertainty quant
     Use ANOVA- or randomforest-importance-like decomposition (Note: Shapley and PDP have different meaning for correlated input, somewhat like type I and III for ANOVA).
     IMPORTANT 🔔 Always use several models for structural uncertainty.
 
-    
+
   === 5. Utilisation #utilisation
   ROLE Modeller + Stakeholder
   RATIONALE [text]
