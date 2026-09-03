@@ -14,7 +14,7 @@
 
   STRUCTURE — the start of a line decides what the line becomes:
 
-    ## SECTION     Top-level section. Only INTRO, PHASES, GLOSSARY and CHECKLIST are recognised.
+    ## SECTION     Top-level section. Only INTRO, PHASES, GLOSSARY and BONES OF CONTENTION are recognised.
     === PHASE      Phase heading.
     --- ITEM       Collapsible card inside the current phase.
     >>> SUB-ITEM   Bullet inside the current item. Optional leading emoji or symbol, then title and #id.
@@ -44,7 +44,7 @@
     One entry per line: term | definition
     Terms are underlined automatically wherever they appear in the text (once per paragraph).
 
-  CHECKLIST:
+  BONES OF CONTENTION:
 
     Same syntax as >>> sub-items inside cards:
       >>> Title text #my-id | JUMP target-card-id
@@ -53,7 +53,7 @@
 
   "MORE DETAILS" PAGES:
 
-    Every phase, item, sub-item and checklist entry has a "More details" button.
+    Every phase, item, sub-item and bones-of-contention entry has a "More details" button.
     Add a content file at details/{id}.txt — {id} is the #id on that line.
     Optional first line: TITLE: My page title
     Syntax: ## heading, ### subheading, blank line = paragraph, EXAMPLE/IMPORTANT boxes.
@@ -80,7 +80,7 @@ Newcomers may want orientation, this resource aims to provide it.
 
 Predictions use models, hence quite a bit of this orientation touches on modelling. It does so, somewhat obscurely, in
 <a href=#modelling>Stage 3</a> under "<a href=#identifying-models>Building trust in model</a>". The reason is that in this context the modelling steps primarily serve to justify the
-choice of the model(s). How to model, and which model to use when is discussed under "<a href=#checklist>Checklist</a>".
+choice of the model(s). How to model, and which model to use when is discussed under "<a href=#bones>Bones of contention</a>".
 
 A model is a flexible thing here: it can be a set of expert statements, a process model, or a deep-learning analysis.
 A prediction is a quantitative statement of a model, including forecasts and projections.
@@ -272,8 +272,8 @@ The quality of predictions is currently unknown due to lack of uncertainty quant
         Model inversion serves two purposes:
 
         <ol>
-        <li> Identify structural errors in the model.
-        <li> Improve representation of observations.
+          <li> Identify structural errors in the model.
+          <li> Improve representation of observations.
         </ol>
 
         Model inversion requires some technical overhead to "invert" the model. Optimising multiple criteria is the key challenge. Model outputs are sometimes biased or systematically distorted and require, well, calibrating (in the sense of a calibration curve in chemistry).
@@ -374,7 +374,7 @@ The quality of predictions is currently unknown due to lack of uncertainty quant
     LINK specific-question
 
 
-## Checklist #checklist
+## Bones of Contention #bones
       >>> 🔔 Should models aim for simplicity or for completeness? #simplicity-completeness | JUMP long-term-planning
         Overparameterised models make poor predictions: too much detail may hurt.
 

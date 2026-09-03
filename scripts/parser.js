@@ -5,7 +5,7 @@ function parseContent(raw) {
     raw=el?el.textContent:'';
   }
   var lines=raw.split('\n');
-  var result={ intro:[], glossary:[], checklist:[], phases:[] };
+  var result={ intro:[], glossary:[], bones:[], phases:[] };
   var section=null, curPhase=null, curNode=null, curSub=null, curField=null;
 
   function flush(){ curField=null; }
@@ -31,6 +31,8 @@ function parseContent(raw) {
     return { icon:'', namePart:sRaw };
   }
 
+  function isBonesSection(name){ return name==='BONES OF CONTENTION'; }
+
   var FIELD_KEYS={
     rationale:'rationale',
     text:'body',
@@ -38,31 +40,31 @@ function parseContent(raw) {
     example:'example',
     important:'important',
     'sub-desc':'desc',
-    'checklist-desc':'desc'
+    'bones-desc':'desc'
   };
 
   function fieldTarget(){
     if(curField==='rationale') return curPhase&&!curNode?curPhase:null;
     if(curField==='text'||curField==='text-after'||curField==='example'||curField==='important') return curNode;
     if(curField==='sub-desc') return curSub;
-    if(curField==='checklist-desc'&&result.checklist.length) return result.checklist[result.checklist.length-1];
+    if(curField==='bones-desc'&&result.bones.length) return result.bones[result.bones.length-1];
     return null;
   }
 
-  function parseChecklistJump(pipeTail){
+  function parseBonesJump(pipeTail){
     var m=pipeTail&&trimVal(pipeTail).match(/JUMP\s+(\S+)/);
     return m?m[1]:null;
   }
 
-  function pushChecklistItem(namePart, pipeTail){
+  function pushBonesItem(namePart, pipeTail){
     var itemMeta=splitDefinedId(namePart);
-    var itemId=itemMeta.id||('checklist-'+(result.checklist.length+1));
-    result.checklist.push({
+    var itemId=itemMeta.id||('bone-'+(result.bones.length+1));
+    result.bones.push({
       id:itemId,
       icon:'',
       name:itemMeta.label,
       desc:'',
-      jump:parseChecklistJump(pipeTail)
+      jump:parseBonesJump(pipeTail)
     });
   }
 
@@ -122,21 +124,21 @@ function parseContent(raw) {
       continue;
     }
     if(line.indexOf('>>> ')===0){
-      if(section==='CHECKLIST'){
+      if(isBonesSection(section)){
         flush();
         var cp=trimVal(line.slice(4)).split('|');
         var subParts=parseSubItemRaw(trimVal(cp[0]));
         var itemMeta=splitDefinedId(subParts.namePart);
         var lm=cp[1]&&trimVal(cp[1]).match(/JUMP\s+(\S+)/);
-        var itemId=itemMeta.id||('checklist-'+(result.checklist.length+1));
-        result.checklist.push({
+        var itemId=itemMeta.id||('bone-'+(result.bones.length+1));
+        result.bones.push({
           id:itemId,
           icon:subParts.icon,
           name:itemMeta.label,
           desc:'',
           jump:lm?lm[1]:null
         });
-        curField='checklist-desc';
+        curField='bones-desc';
         continue;
       }
       flush();
@@ -205,15 +207,15 @@ function parseContent(raw) {
       if(gp.length>=2) result.glossary.push({term:trimVal(gp[0]),def:trimVal(gp[1])});
       continue;
     }
-    if(section==='CHECKLIST'){
+    if(isBonesSection(section)){
       if(line.indexOf('|')>-1){
         flush();
         var cp=line.split('|');
-        pushChecklistItem(trimVal(cp[0]),cp[1]);
-      }else if(curField==='checklist-desc'&&appendToCurrentField(line)){
+        pushBonesItem(trimVal(cp[0]),cp[1]);
+      }else if(curField==='bones-desc'&&appendToCurrentField(line)){
         /* appended to desc */
-      }else if(result.checklist.length){
-        result.checklist[result.checklist.length-1].name+=' '+line;
+      }else if(result.bones.length){
+        result.bones[result.bones.length-1].name+=' '+line;
       }
       continue;
     }

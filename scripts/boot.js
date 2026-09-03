@@ -20,7 +20,7 @@ function renderAll(raw){
   if(glosOut) glosOut.innerHTML=renderGlossary(data.glossary);
 
   var highlightOut=document.getElementById('highlight-out');
-  if(highlightOut) highlightOut.innerHTML=renderChecklist(data.checklist);
+  if(highlightOut) highlightOut.innerHTML=renderBones(data.bones);
 
   if(window.CitationTools){
     window.CitationTools.hydrate({
@@ -202,7 +202,7 @@ function setAllSectionsExpanded(expanded){
   var secTitles=document.querySelectorAll('.sec-title:not(.no-toggle)');
   for(var m=0;m<secTitles.length;m++) secTitles[m].classList.toggle('collapsed',!expanded);
 
-  var sections=document.querySelectorAll('#s-checklist, #s-glossary, #s-references');
+  var sections=document.querySelectorAll('#s-bones, #s-glossary, #s-references');
   for(var n=0;n<sections.length;n++){
     sections[n].classList.toggle('sec-collapsed',!expanded);
     setFindHidden(sections[n],!expanded);
