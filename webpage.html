@@ -332,7 +332,7 @@ General references: <sup class="cite-ref" data-cite="Sun 2015"></sup>
         <li>Use: How can the model be used, how can predictions be made? This typically takes the form of one or several tutorials.</li>
       </ol>
 
-      General references: <sup class="cite-ref" data-cite="Grimm 2010"></sup>, <sup class="cite-ref" data-cite="Schmolke 2010"></sup>, <sup class="cite-ref" data-cite="Swannack 2025"></sup>
+      General references: <sup class="cite-ref" data-cite="Grimm 2010"></sup> <sup class="cite-ref" data-cite="Schmolke 2010"></sup> <sup class="cite-ref" data-cite="Swannack 2025"></sup>
 
 
 
@@ -404,7 +404,29 @@ LINK specific-question
 
 ## Checklist #bones
   >>> Should models aim for simplicity or for completeness? #ContentiousSimplicityComplexity | LINK long-term-planning
-  Overparameterised models make poor predictions: too much detail may hurt.
+  There seems to be, with process models, a "natural" procession from starting as a highly simplified and abstract model, to becoming evermore enriched in detail and subprocesses. The proponents of "complexification" argue that thereby the model becomes more realistic and will therefore represent the system under more conditions. The opponents argue that such complexified models become unwieldy to run, fit and (sensitivity) analyse, and hence we don't really know what the model in its entirety represents (not to speak about the challenges involved with parameterisation, fitting or uncertainty analysis).
+
+  Both points of view are correct in their own way. Which point to take depends primarily on the specific goal of the prediction made with this model. The more academic-scientific the purpose, the more important are validation and uncertainty analysis, leaning towards simpler one-model-per-purpose models. The more the model is supposed to be an all-there-is-style repository of knowledge, the more complexification seems justified. 
+
+  Beyond such general considerations, here are the downsides of each approach:<br>
+  <i>Detailed model cons</i>: 
+  <ul>
+    <li>Parametrisation and model analysis (SA/UA) become ever more difficult to the point that they are not repeated for every model version. </li>
+    <li>For a model comprising dozens of modules and tens of parameters, justifying the specific value of any parameter, particularly the latent ones, becomes near impossible. The origin of functional relationships and their parameter values becomes obscured by history and revisions, and adding a new module strains the integrity of the full model.</li>
+    <li>Unit testing explodes in complexity and, all too often, sparser. </li>
+    <li>Maintaining a model with dozens of alternative formulations turns an environmental model into a software engineering task and fosters computer, not environmental thinking. </li>
+    <li>Documentation of the assumptions and limits is very hard, as the multidimensional parameter-space is typically not communicable (meaning that increasingly many parameter combinations become scientifically implausible). </li>
+    <li>While the aim is to represent many different system states, fewer and fewer of them can be validated in combination, making it unclear whether both modules and model are actually useful representations of the target system. </li>
+    <li>From experience it seems that the amount of "poorly written" code increases (arbitrary conditional module switches, hard-coded latent parameters, inefficient subroutines, mismatching resolutions between modules). This is because building a complicated model is really difficult (see <a href="https://en.wikipedia.org/wiki/Anna_Karenina_principle">Anna Karenina-principle</a>)!</li>
+  </ul>
+ 
+  <i>Parsimonious model cons</i>: (This is about simple process models aiming at representing the real world with minimal process representation. This type of model is rare, and generalisations of its problems a bit more difficult.) 
+  <ul>
+    <li>The quality of the model (and hence the bias in its predictions) depends hugely on the data available, as they are the key source of determining the structural complexity. </li>
+    <li>Choosing a suitable likelihood (or other target function) becomes a crucially important step, moving the environmental expertise into second place behind statistical expertise.</li>
+    <li>Maintaining a zoo of different model formulations, or a master model with many module switches, becomes an engineering challenge.</li>
+  </ul>
+ 
 
   >>> Validation needs to be planned: split data into MANY subsets | LINK validation
 >>> Upscale of microlevel processes | LINK specify-model
