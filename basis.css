@@ -575,6 +575,7 @@ body > p[id^="footnote-"] .footnote-label{
 
 /* ── FOOTER ─────────────────────────────────────────────── */
 footer{
+  position:relative;
   width:100%;
   margin-top:56px;padding:20px 32px;
   background:var(--green-deep);color:rgba(255,255,255,.45);
@@ -582,6 +583,14 @@ footer{
 }
 footer a{color:var(--green-light);text-decoration:none}
 footer a:hover{text-decoration:underline}
+.footer-imprint{
+  position:absolute;
+  right:32px;
+  bottom:20px;
+  color:rgba(255,255,255,.55);
+  font-size:.72rem;
+}
+.footer-imprint:hover{color:var(--green-light)}
 .footer-ack-title{
   color:#fff;
   font-family:'Lora',serif;
@@ -846,7 +855,11 @@ body.show-links #connector-svg{display:block}
     max-width:120px;
   }
   footer{
-    padding:20px 18px;
+    padding:20px 18px 36px;
+  }
+  .footer-imprint{
+    right:18px;
+    bottom:14px;
   }
   .floating-controls{
     right:8px;
