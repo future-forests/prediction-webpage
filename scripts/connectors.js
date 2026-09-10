@@ -27,7 +27,17 @@
       var t=node.xlinks[x];
       if(t&&t!==node.id) CONNECTOR_PAIRS.push({from:node.id,to:t});
     }
+    for(var s=0,sLen=node.subItems.length;s<sLen;s++){
+      var sub=node.subItems[s];
+      for(var y=0,yLen=(sub.xlinks||[]).length;y<yLen;y++){
+        var u=sub.xlinks[y];
+        if(u&&u!==sub.id) CONNECTOR_PAIRS.push({from:sub.id,to:u});
+      }
+    }
   }
+
+  var resizeObserver=null;
+  var redrawTimer=null;
 
   function isVisible(el){
     var p=el;
@@ -40,29 +50,55 @@
     return true;
   }
 
-  function getAnchorPoint(el, originLeft, originTop){
-    var hd=el.querySelector ? (el.querySelector('.card-hd') || el.querySelector('.phase-hd')) : null;
-    var target=hd || el;
-    var r=target.getBoundingClientRect();
-
-    if(r.width===0 && r.height===0){
-      var anc=el.parentElement;
-      while(anc && anc !== document.body){
-        if(anc.classList && anc.classList.contains('phase')){
-          var ph=anc.querySelector('.phase-hd');
-          if(ph){
-            var pr=ph.getBoundingClientRect();
-            if(pr.width!==0 || pr.height!==0){
-              return { right: pr.right-originLeft, y: pr.top+pr.height/2-originTop };
-            }
-          }
-        }
-        anc=anc.parentElement;
+  // Resolve cards and sub-items to their parent card/phase header for stable anchors.
+  function getLinkHost(el){
+    var node=el;
+    while(node&&node!==document.body){
+      if(node.classList){
+        if(node.classList.contains('card')) return node;
+        if(node.classList.contains('phase')) return node;
       }
-      return null;
+      node=node.parentElement;
     }
+    return el;
+  }
 
+  function getAnchorPoint(el, originLeft, originTop, peerEl){
+    var host=getLinkHost(el);
+    var peerHost=peerEl?getLinkHost(peerEl):null;
+    var sameHost=peerHost&&host===peerHost;
+    var target=sameHost?el:(host.querySelector('.card-hd')||host.querySelector('.phase-hd'));
+    if(!target) return null;
+    var r=target.getBoundingClientRect();
+    if(r.width===0&&r.height===0){
+      if(sameHost){
+        target=host.querySelector('.card-hd')||host.querySelector('.phase-hd');
+        if(!target) return null;
+        r=target.getBoundingClientRect();
+      }
+      if(r.width===0&&r.height===0) return null;
+    }
     return { right: r.right-originLeft, y: r.top+r.height/2-originTop };
+  }
+
+  function scheduleDrawConnectors(){
+    if(redrawTimer) clearTimeout(redrawTimer);
+    redrawTimer=setTimeout(function(){
+      redrawTimer=null;
+      drawConnectors();
+    }, 50);
+  }
+
+  function initConnectorObserver(mainEl){
+    if(resizeObserver){
+      resizeObserver.disconnect();
+      resizeObserver=null;
+    }
+    if(typeof ResizeObserver==='undefined') return;
+    var pageBody=document.querySelector('.page-body');
+    resizeObserver=new ResizeObserver(scheduleDrawConnectors);
+    if(mainEl) resizeObserver.observe(mainEl);
+    if(pageBody) resizeObserver.observe(pageBody);
   }
 
   function addCurveSegment(g,x1,y1,cx1,cy1,cx2,cy2,x2,y2,color){
@@ -114,8 +150,8 @@
       if(!fromEl||!toEl) continue;
       if(!isVisible(fromEl)&&!isVisible(toEl)) continue;
 
-      var fromA=getAnchorPoint(fromEl, originLeft, originTop);
-      var toA=getAnchorPoint(toEl, originLeft, originTop);
+      var fromA=getAnchorPoint(fromEl, originLeft, originTop, toEl);
+      var toA=getAnchorPoint(toEl, originLeft, originTop, fromEl);
       if(!fromA||!toA) continue;
 
       var x1=fromA.right, y1=fromA.y;
@@ -136,4 +172,5 @@
 
   window.collectConnectors=collectConnectors;
   window.drawConnectors=drawConnectors;
+  window.initConnectorObserver=initConnectorObserver;
 })();

@@ -114,9 +114,18 @@
   }
 
   function getBiblio(opts){
-    if(opts&&opts.biblio) return opts.biblio;
-    if(opts&&opts.biblioGlobal&&window[opts.biblioGlobal]) return window[opts.biblioGlobal];
-    return {};
+    var bib={};
+    if(opts&&opts.biblio) bib=opts.biblio;
+    else if(opts&&opts.biblioGlobal&&window[opts.biblioGlobal]) bib=window[opts.biblioGlobal];
+    return normalizeBiblio(bib);
+  }
+
+  function normalizeBiblio(bib){
+    var out={};
+    for(var k in bib){
+      if(Object.prototype.hasOwnProperty.call(bib,k)) out[k.toLowerCase()]=bib[k];
+    }
+    return out;
   }
 
   function renderReferences(outEl, orderedKeys, bib, missingPrefix){
@@ -132,6 +141,7 @@
 
   function hydrate(opts){
     opts=opts||{};
+    var root=opts.root||document;
     var biblio=getBiblio(opts);
     var citationSelector=opts.citationSelector||'.cite-ref[data-cite]';
     var footnoteSupSelector=opts.footnoteSupSelector||'.footnote-ref';
@@ -139,7 +149,7 @@
     var missingPrefix=opts.missingPrefix||'Reference details not found for ';
 
     var seen={}, orderedKeys=[], nextNum=1;
-    var cites=document.querySelectorAll(citationSelector);
+    var cites=root.querySelectorAll(citationSelector);
     for(var i=0;i<cites.length;i++){
       var cite=cites[i];
       var raw=(cite.getAttribute('data-cite')||'').trim();
@@ -155,14 +165,14 @@
       cite.removeAttribute('title');
     }
 
-    var sups=document.querySelectorAll(footnoteSupSelector);
+    var sups=root.querySelectorAll(footnoteSupSelector);
     for(var j=0;j<sups.length;j++){
       sups[j].textContent=numberToLetters(j+1);
       if(!sups[j].getAttribute('tabindex')) sups[j].setAttribute('tabindex','0');
     }
 
     if(footnoteLabelSelector){
-      var labels=document.querySelectorAll(footnoteLabelSelector);
+      var labels=root.querySelectorAll(footnoteLabelSelector);
       for(var k=0;k<labels.length;k++) labels[k].textContent=numberToLetters(k+1)+'. ';
     }
 
