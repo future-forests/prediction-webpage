@@ -2,7 +2,7 @@
 
 A community-authored, interactive web resource for researchers and practitioners designing, executing, and communicating rigorous quantitative predictions in ecology and environmental science.
 
-**Live site:** https://martawenta.github.io/prediction_webpage/basis.html
+**Live site:** https://future-forests.github.io/prediction-webpage/basis.html
 
 ---
 
@@ -14,8 +14,8 @@ Most edits go in **`webpage.html`** (syntax guide in the HTML comment; content i
 
 1. **Fork** the repo on GitHub (or clone if you are a collaborator):
    ```bash
-   git clone https://github.com/YOUR-USERNAME/prediction_webpage.git
-   cd prediction_webpage
+   git clone https://github.com/future-forests/prediction-webpage.git
+   cd prediction-webpage
    ```
 2. **Create a branch** from `main` (only needed once — pick a short name you will reuse):
    ```bash
@@ -30,7 +30,7 @@ Most edits go in **`webpage.html`** (syntax guide in the HTML comment; content i
    git push -u origin your-name-or-topic
    ```
 4. **Open a Pull Request** to `main` on GitHub. Describe the change in a few sentences.
-5. After review and merge, the site is updated from `main` (maintainers use `push.sh` to publish to GitHub Pages).
+5. After review and merge to `main`, GitHub Pages updates the live site automatically (usually within a few minutes).
 
 ### Returning contributors
 
