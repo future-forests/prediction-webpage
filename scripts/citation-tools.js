@@ -50,6 +50,13 @@
   function showTooltip(el){
     if(!el) return;
     var tip=ensureTooltip();
+    var overlay=el.closest?el.closest('#detail-overlay'):null;
+    if(overlay){
+      var card=overlay.querySelector('.detail-overlay-card');
+      if(card&&tip.parentNode!==card) card.appendChild(tip);
+    }else if(tip.parentNode!==document.body){
+      document.body.appendChild(tip);
+    }
     tip.innerHTML=citationHtml(el.getAttribute('data-ref')||'');
     tip.hidden=false;
     tip.classList.toggle('is-pinned', !!pinnedEl && pinnedEl===el);
@@ -144,7 +151,7 @@
     var root=opts.root||document;
     var biblio=getBiblio(opts);
     var citationSelector=opts.citationSelector||'.cite-ref[data-cite]';
-    var footnoteSupSelector=opts.footnoteSupSelector||'.footnote-ref';
+    var footnoteSupSelector='footnoteSupSelector' in opts?opts.footnoteSupSelector:'.footnote-ref';
     var footnoteLabelSelector=opts.footnoteLabelSelector||null;
     var missingPrefix=opts.missingPrefix||'Reference details not found for ';
 
@@ -165,7 +172,7 @@
       cite.removeAttribute('title');
     }
 
-    var sups=root.querySelectorAll(footnoteSupSelector);
+    var sups=footnoteSupSelector?root.querySelectorAll(footnoteSupSelector):[];
     for(var j=0;j<sups.length;j++){
       sups[j].textContent=numberToLetters(j+1);
       if(!sups[j].getAttribute('tabindex')) sups[j].setAttribute('tabindex','0');

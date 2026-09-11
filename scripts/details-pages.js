@@ -1,4 +1,4 @@
-// Detail page overlay — content lives at details/{id}.txt, matching each #id in basis.html.
+// Detail page overlay — content lives at details/{id}.md, matching each #id in basis.html.
 
 function hidePlaceholderDetailButtons(){
   var buttons=document.querySelectorAll('.more-details-btn[data-detail-id]');
@@ -80,6 +80,7 @@ function openDetailOverlay(id, fallbackTitle){
 function closeDetailOverlay(){
   var dialog=document.getElementById('detail-overlay');
   var bodyEl=document.getElementById('detail-overlay-body');
+  if(window.CitationTools) window.CitationTools.hideTooltip();
   if(bodyEl) bodyEl.innerHTML='';
   if(dialog&&dialog.open){
     dialog.close();

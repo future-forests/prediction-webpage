@@ -1,40 +1,33 @@
 # Detail page editor guide
 
-Each "More details" button on the main page links to a content file in this folder.
+Each "More details" button on the main page links to a Markdown file in this folder.
 
 ## Creating a detail page
 
 1. Find the `#id` on the card in `webpage.html` (e.g. `--- Specific question #specific-question`).
-2. Create `details/{id}.txt` with that same id (e.g. `details/specific-question.txt`).
+2. Create `details/{id}.md` with that same id (e.g. `details/specific-question.md`).
 
-If no `.txt` file exists (or it is empty), the button is hidden automatically.
+If no `.md` file exists (or it is empty), the button is hidden automatically.
 
-## File format
+## Markdown
 
-Optional title line at the top, then content:
+Detail pages use standard Markdown. See the [Markdown Guide](https://www.markdownguide.org/basic-syntax/) for headings, lists, bold, italic, links, footnotes, and more. Inline HTML also works. Math uses `\(...\)` inline and `\[...\]` for display (MathJax).
 
-```text
-TITLE: Orientation: My topic title
+## Internal links
 
-## Section heading
+Link to another card or section on the main page using its `#id` from `webpage.html`:
 
-Paragraph text here. Blank line starts a new paragraph.
+```markdown
+See [parameterisation](#parameterisation) for more.
+[Stage 1](#setting-stage) defines the prediction goal.
 ```
 
-- **`TITLE:`** — shown in the overlay header and browser tab when previewing standalone. If omitted, the card title from the main page is used.
-- Content uses the same mini-markup as the main page detail syntax.
+## References
 
-## Syntax
+Cite a work from the central bibliography (`scripts/references.js`) with `[@Author Year]`:
 
-| Line starts with | Result |
-|------------------|--------|
-| `## Heading` | Section title |
-| `### Subheading` | Subsection title |
-| blank line | New paragraph |
-| `---` | Horizontal rule |
-| `EXAMPLE heading` | Highlighted example box (heading on same line) |
-| `IMPORTANT heading` | Highlighted warning box |
+```markdown
+Spatial discretisation may require re-formulating process parameters.[@Chipperfield 2011]
+```
 
-Inline HTML is OK: `<em>Label:</em>`, `<a href=#id>`, `<i>emphasis</i>`, `<sup class="cite-ref" data-cite="Author Year"></sup>`
-
-Math: `\(...\)` or `\[...\]`
+The key must match an entry in `scripts/references.js` exactly (e.g. `Dormann 2026`, `Spake 2023`). Add new references there first.
