@@ -473,6 +473,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--parchment);color:
   box-shadow:0 6px 24px rgba(0,0,0,.28);
 }
 
+.detail-overlay-card .cite-tooltip{
+  z-index:5;
+}
+
 .cite-tooltip a{
   color:var(--green-light);
   text-decoration:underline;
@@ -821,6 +825,27 @@ body.embedded-detail a{
 body.detail-page a:hover,
 body.embedded-detail a:hover{
   color:var(--green-deep);
+}
+
+body.detail-page .footnotes,
+body.embedded-detail .footnotes{
+  margin-top:28px;
+  padding-top:16px;
+  border-top:1px solid var(--rule);
+  font-size:.78rem;
+  color:var(--ink-mid);
+  line-height:1.55;
+}
+
+body.detail-page .footnotes ol,
+body.embedded-detail .footnotes ol{
+  margin:0;
+  padding-left:1.4em;
+}
+
+body.detail-page .footnote-ref,
+body.embedded-detail .footnote-ref{
+  color:var(--green-mid);
 }
 
 /* ── SVG CONNECTOR OVERLAY (document-anchored: scrolls with the page) ── */
