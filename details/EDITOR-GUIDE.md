@@ -4,8 +4,8 @@ Each "More details" button on the main page links to a Markdown file in this fol
 
 ## Creating a detail page
 
-1. Find the `#id` on the card in `webpage.html` (e.g. `--- Specific question #specific-question`).
-2. Create `details/{id}.md` with that same id (e.g. `details/specific-question.md`).
+1. Find the `#id` on the line in `webpage.html` (e.g. `## INTRO #intro`, `## GLOSSARY #glossary`, `--- Specific question #specific-question`).
+2. Create `details/{id}.md` with that same id (e.g. `details/intro.md`, `details/glossary.md`).
 
 If no `.md` file exists (or it is empty), the button is hidden automatically.
 

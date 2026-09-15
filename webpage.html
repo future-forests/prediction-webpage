@@ -17,7 +17,8 @@
     ## SECTION     Top-level section. Only INTRO, PHASES, GLOSSARY and BONES OF CONTENTION are recognised.
     === PHASE      Phase heading.
     --- ITEM       Collapsible card inside the current phase.
-    >>> SUB-ITEM   Bullet inside the current item. Optional leading emoji or symbol, then title and #id.
+    >>> SUB-ITEM   Collapsible bullet inside the current item or under Bones of Contention.
+                   Optional leading emoji or symbol, then title and #id.
 
   Every phase, item and sub-item should end with an explicit id: #my-id
   Example: --- Specific question #specific-question
@@ -53,7 +54,7 @@
 
   "MORE DETAILS" PAGES:
 
-    Every phase, item, sub-item and bones-of-contention entry has a "More details" button.
+    Any ## section (with #id), phase, item, sub-item and bones-of-contention entry has a "More details" button.
     Add a content file at details/{id}.md — {id} is the #id on that line.
     Write standard Markdown (see details/EDITOR-GUIDE.md). Citations: [@Author Year]. Internal links: [text](#card-id).
     Preview standalone: details/page.html?id={id}
@@ -66,7 +67,7 @@
 
 <script type="text/content" id="page-content">
 
-## INTRO
+## INTRO #intro
 
 Predictions serve two goals: addressing practical, applied questions with stakeholders,
 AND advancing scientific understanding of a system by falsifying causal predictions.
