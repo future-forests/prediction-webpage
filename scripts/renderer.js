@@ -37,18 +37,29 @@ function renderOptionalBlock(text, className){
   return isPlaceholder(text)?'':'<div class="'+className+'">'+renderRichText(text)+'</div>';
 }
 
+function renderCollapsibleSubItem(s, opts){
+  opts=opts||{};
+  var leafId=s.id||(opts.fallbackPrefix||'item')+'-'+(opts.index!=null?opts.index:0);
+  var jump=opts.jumpHtml||'';
+  var style=opts.bgWhite?' style="background:var(--parchment)"':'';
+  var html='<div class="sub-item" id="'+escapeAttr(leafId)+'"'+style+'>';
+  html+='<div class="sub-item-hd">';
+  if(s.icon) html+='<span class="si-icon">'+s.icon+'</span>';
+  html+='<span class="si-name">'+s.name+renderRoleTag(s.role)+jump+'</span>';
+  html+='<svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  html+='</div>';
+  html+='<div class="sub-item-body" hidden="until-found">';
+  if(!isPlaceholder(s.desc)) html+='<div class="si-desc">'+renderRichText(s.desc)+'</div>';
+  html+=renderDetailsButton(leafId,s.name);
+  html+='</div></div>';
+  return html;
+}
+
 function renderSubItems(items, bgWhite){
   if(!items||!items.length) return '';
   var html='<ul class="sub-list">';
   for(var i=0;i<items.length;i++){
-    var s=items[i], subLeafId=s.id||('item-'+i);
-    html+='<li><div class="sub-item" id="'+escapeAttr(subLeafId)+'" '+(bgWhite?'style="background:var(--parchment)"':'')+'>';
-    if(s.icon) html+='<span class="si-icon">'+s.icon+'</span>';
-    html+='<div class="si-body">';
-    html+='<div class="si-name">'+s.name+renderRoleTag(s.role)+'</div>';
-    if(!isPlaceholder(s.desc)) html+='<div class="si-desc">'+renderRichText(s.desc)+'</div>';
-    html+=renderDetailsButton(subLeafId,s.name);
-    html+='</div></div></li>';
+    html+='<li>'+renderCollapsibleSubItem(items[i],{ bgWhite:bgWhite, fallbackPrefix:'item', index:i })+'</li>';
   }
   return html+'</ul>';
 }
@@ -118,15 +129,9 @@ function renderBones(items){
   if(!items||!items.length) return '';
   var html='<ul class="sub-list bones-list">';
   for(var i=0;i<items.length;i++){
-    var s=items[i], leafId=s.id||('bone-'+i);
-    html+='<li><div class="sub-item" id="'+escapeAttr(leafId)+'">';
-    if(s.icon) html+='<span class="si-icon">'+s.icon+'</span>';
-    html+='<div class="si-body">';
+    var s=items[i];
     var jump=s.jump?' <a href="#'+escapeAttr(s.jump)+'" class="bones-jump">&rarr;</a>':'';
-    html+='<div class="si-name">'+s.name+jump+'</div>';
-    if(!isPlaceholder(s.desc)) html+='<div class="si-desc">'+renderRichText(s.desc)+'</div>';
-    html+=renderDetailsButton(leafId,s.name);
-    html+='</div></div></li>';
+    html+='<li>'+renderCollapsibleSubItem(s,{ fallbackPrefix:'bone', index:i, jumpHtml:jump })+'</li>';
   }
   return html+'</ul>';
 }

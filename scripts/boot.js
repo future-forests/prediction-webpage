@@ -7,20 +7,37 @@ function typesetMath(roots){
 }
 window.typesetMath=typesetMath;
 
+function appendSectionDetails(id, title, contentEl, anchorEl){
+  if(!id||!contentEl) return;
+  if(anchorEl) anchorEl.id=id;
+  contentEl.insertAdjacentHTML('beforeend', renderDetailsButton(id, title));
+}
+
 function renderAll(raw){
   var data=parseContent(raw);
+  var sectionIds=data.sectionIds||{};
 
-  document.getElementById('intro-body').innerHTML=renderIntro(data.intro);
+  var introBody=document.getElementById('intro-body');
+  introBody.innerHTML=renderIntro(data.intro);
+  appendSectionDetails(sectionIds.INTRO,'Introduction',introBody,document.getElementById('intro-card'));
 
   var main=document.getElementById('main'), html='';
   for(var i=0;i<data.phases.length;i++) html+=renderPhase(data.phases[i]);
+  if(sectionIds.PHASES){
+    html='<section id="'+escapeAttr(sectionIds.PHASES)+'">'
+      +renderDetailsButton(sectionIds.PHASES,'Phases')
+      +html
+      +'</section>';
+  }
   main.innerHTML=html;
 
   var glosOut=document.getElementById('glos-out');
   if(glosOut) glosOut.innerHTML=renderGlossary(data.glossary);
+  appendSectionDetails(sectionIds.GLOSSARY,'Glossary',document.getElementById('s-glossary'),document.getElementById('glossary'));
 
   var highlightOut=document.getElementById('highlight-out');
   if(highlightOut) highlightOut.innerHTML=renderBones(data.bones);
+  appendSectionDetails(sectionIds['BONES OF CONTENTION'],'Bones of Contention',document.getElementById('s-bones'),document.getElementById('bones'));
 
   if(window.CitationTools){
     window.CitationTools.hydrate({
@@ -108,6 +125,9 @@ function revealCollapsedForSearch(target){
       if(node.classList.contains('card')){
         node.classList.add('open');
         setFindHidden(node.querySelector('.card-body'),false);
+      }else if(node.classList.contains('sub-item')){
+        node.classList.add('open');
+        setFindHidden(node.querySelector('.sub-item-body'),false);
       }else if(node.classList.contains('phase')){
         node.classList.remove('collapsed');
         setFindHidden(node.querySelector('.phase-nodes'),false);
@@ -157,6 +177,8 @@ function navigateToInPageTarget(hash){
 document.addEventListener('click',function(e){
   var cardHd=e.target.closest&&e.target.closest('.card-hd');
   if(cardHd){ toggleContainer(cardHd.parentElement,'.card-body',false); return; }
+  var subHd=e.target.closest&&e.target.closest('.sub-item-hd');
+  if(subHd&&!e.target.closest('a')){ toggleContainer(subHd.parentElement,'.sub-item-body',false); return; }
   var phaseHd=e.target.closest&&e.target.closest('.phase-hd');
   if(phaseHd){ toggleContainer(phaseHd.parentElement,'.phase-nodes',true); return; }
   var secTitle=e.target.closest&&e.target.closest('.sec-title[data-sec]');
@@ -198,6 +220,9 @@ function setAllSectionsExpanded(expanded){
 
   var cards=document.querySelectorAll('.card');
   for(var j=0;j<cards.length;j++) setExpanded(cards[j],'.card-body',expanded,false);
+
+  var subItems=document.querySelectorAll('.sub-item');
+  for(var k=0;k<subItems.length;k++) setExpanded(subItems[k],'.sub-item-body',expanded,false);
 
   var secTitles=document.querySelectorAll('.sec-title:not(.no-toggle)');
   for(var m=0;m<secTitles.length;m++) secTitles[m].classList.toggle('collapsed',!expanded);
