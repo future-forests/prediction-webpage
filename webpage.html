@@ -77,22 +77,6 @@ is prediction science, in particular when it achieves validation of structure.
 
 Newcomers may want orientation, this resource aims to provide it.
 
-Predictions use models, hence quite a bit of this orientation touches on modelling. It does so, somewhat obscurely, in
-<a href=#modelling>Stage 3</a> under "<a href=#identifying-models>Building trust in model</a>". The reason is that in this context the modelling steps primarily serve to justify the
-choice of the model(s). How to model, and which model to use when is discussed under "<a href=#bones>Bones of contention</a>".
-
-A model is a flexible thing here: it can be a set of expert statements, a process model, or a deep-learning analysis.
-A prediction is a quantitative statement of a model, including forecasts and projections.
-
-As a teaser, here are a few points to ponder:
-
-A "context" explanation points to a system defined too narrowly, and may lead eventually to incompressible system descriptions if everything always remains context-dependent.
-
-Keep the long-term view of science in mind.
-
-The quality of predictions is currently unknown due to lack of uncertainty quantification.
-
-
 
 ## PHASES
 
@@ -280,17 +264,16 @@ The quality of predictions is currently unknown due to lack of uncertainty quant
           <li> Improve predictions from model by reducing bias.
         </ol>
 
-        Model inversion requires some technical overhead to "invert" the model (see details). Optimising multiple criteria is the key challenge. Computation effort may be prohibitive for large models.
+        Model inversion requires some technical overhead to "invert" the model (see "More details" below). Optimising multiple criteria is the key challenge. Computation effort may be prohibitive for large models.
 
-        On the other hand, model outputs are sometimes biased or systematically distorted and require, well, calibrating (in the sense of a calibration curve in chemistry). That is fully accepted in statistics (although not necessarily in machine learning<sup class="cite-ref" data-cite="Dormann 2020"></sup>), and model inversion is seeping gradually into fields such as cosmology<sup class="cite-ref" data-cite="Akeret 2015"></sup> and economics<sup class="cite-ref" data-cite="Lux 2023"></sup>.
+        On the other hand, model outputs are sometimes biased or systematically distorted and require, well, calibrating (in the sense of a calibration curve in chemistry). That is fully accepted in statistics (although not necessarily in machine learning<sup class="cite-ref" data-cite="Dormann 2020"></sup>), and model inversion is seeping gradually into fields such as cosmology<sup class="cite-ref" data-cite="Akeret 2015"></sup> and economics.<sup class="cite-ref" data-cite="Lux 2023"></sup>
 
-        IMPORTANT 🔔 Calibration is really useful.
         LINK validation
 
       >>> 🌀 Uncertainty analysis #uncertainty-analysis
         Uncertainty analysis (UA)<sup class="cite-ref" data-cite="Committee 2012"></sup> aims at representing the consequences of all sources of variation on the prediction (data, model structure, model parameters, model stochasticity, initial values, scenarios, and so forth<div class="cite-ref" data-cite="Dormann 2026"></div>). Methods to propagate uncertainty through a model-and-prediction-pipeline include bootstrapping, Taylor expansions and Bayesian modelling.<sup class="cite-ref" data-cite="Taylor 1997">,</sup><sup class="cite-ref" data-cite="Benaroya 2005">,</sup><sup class="cite-ref" data-cite="Wolter 2007"></sup> Typically UA results in a probability distribution (PDF), summarised e.g. by mean or median and 95% confidence interval. In contrast to raw model residuals (i.e. difference between point prediction and observation), PDFs allow expressing residuals in relation to the prediction uncertainty, e.g. as percentiles or as z-score.
 
-        After quantifying prediction uncertainty, three follow-up steps may follow: (1) an analysis of the sources of uncertainty ("uncertainty decomposition"), using ANOVA or variable-importance-based approaches. If test/validation data are available: (2) quantification of expected prediction error (based on raw residuals of prediction to test data, e.g. RMSPE); and (3) computation of some measure of prediction quality based on the PDF (log-likelihood, or, if no assumption about the PDF shall be made, by CPRS<sup class="cite-ref" data-cite="Matheson 1976"></sup>). The last step can be extended to compute prediction limits.,<sup class="cite-ref" data-cite="Wesselkamp 2025"></sup>
+        After quantifying prediction uncertainty, three follow-up steps may follow: (1) an analysis of the sources of uncertainty ("uncertainty decomposition"), using ANOVA or variable-importance-based approaches. If test/validation data are available: (2) quantification of expected prediction error (based on raw residuals of prediction to test data, e.g. RMSPE); and (3) computation of some measure of prediction quality based on the PDF (log-likelihood, or, if no assumption about the PDF shall be made, by CPRS<sup class="cite-ref" data-cite="Matheson 1976"></sup>). The last step can be extended to compute prediction limits.<sup class="cite-ref" data-cite="Wesselkamp 2025"></sup>
 
         IMPORTANT 🔔 Validation needs to be planned: split data into MANY subsets.
 
@@ -383,8 +366,100 @@ The quality of predictions is currently unknown due to lack of uncertainty quant
 
 
 ## Bones of Contention #bones
-      >>> 🔔 Should models aim for simplicity or for completeness? #simplicity-completeness | JUMP long-term-planning
-        Overparameterised models make poor predictions: too much detail may hurt.
+      >>> 🔔 How do I measure goodness-of-fit to data?
+        When using the log-likelihood to measure the fit of a model to data, the way the parameters were estimated is irrelevant. If we are happy to make assumptions about the distribution of the observations, given the model prediction (= expected value), then the log-likelihood is a very sound measure of goodness-of-fit. However, the more parameters a model has, the more likely it is to be able to describe a data set. Hence we may want to control for the number of (effective) parameters (think: AIC, BIC).
+      
+        Far more common is the computation of the <a href:"https://en.wikipedia.org/wiki/Root_mean_square_deviation">root mean squared error (RMSE)</a>. This measure evaluates deviations fairly if the residuals more or less follow a normal distribution, but is less useful for skewed distribution of residuals. In this case scientists often resort to robust measures of error (such as median absolute difference), rather than finding heavy-tailed distributions that describe their data. This seems to be very much dependent on the field of science, and at present no obvious conversion on likelihood-based model fits can be detected outside regression-like approaches.
+        
+      >>> 🔔 My level of detail is correct!
+        What to include and what to omit from a model is science, and at the core of model building. Even the most obvious processes linking environmental drivers with system states must have a scientific justification, exactly because in/exclusion is science. In ecology, everything is related to everything else, so does everything need to go into the model?
+      
+        Processes are omitted because they contribute little to the dynamics of the state variable of interest, not because they are unrelated. In biochemistry/molekular biology, tens of thousands of reactions are known within a single cell (and demonstrated by proof-of-principle papers), but that does not mean that we need to model all of them to estimate what activating a specific receptor does to another specific enzyme. As a rule of thumb: the closer the two are linked, the less we need to know what happens around them. Or, as sometimes phrased: Don't include processes more than two steps away from the state variable.
+        
+        Such folklore may or may not work for our system of interest. Two important elements play into the decision what to in/exclude are: What is the purpose of the model? and How general is the process in this system? If the purpose is a repository of all that is known about a system, then there is no obvious reason to exclude any process demonstrated to be relevant (see other item in Bones of Contention). If the purpose is, as in the context of this webpage, predictions of system states, then it is worth pruning processes to the minimum needed (to reduce overfitting and thus prediction bias).
+        
+        Finally, if the purpose is one of transfer of knowledge across systems or locations, then site-specific processes probably will transfer poorly and can be done without.
+        
+        It is not obvious, philosophically, that micro-level process description is appropriate or useful for macro-level processes. <small>For example, a soil food web may not be required in an ecosystem model aiming at predicting C-fluxes at the level of a forest stand. Of course the food web affects soil respiration, but the subtleties of how it does so can probably be approximated sufficiently well by a very simple soil-level function of organic content and temperature. A typical example from physics is that fluid dynamics is not built from statistical mechanics of molecules, but describes solely the emerging fluids. There is a micro-level, but it is not helpful for the description of macro-level laminar flows.</small>
+        
+        Overall, what to include for a specific prediction is, for now, a trail-and-error process. Will adding this subprocess improve predictions on unobserved test data? If so, put it in, if not leave it out. (The challenge here is to avoid tailoring the model to the data, i.e. plan ahead for having enough data split for such trials, see <a href=#long-term-planning></a>.) It is unlikely that more is better, however, as more detail also adds more parameter uncertainty.
+        
+        Summary: The "correct" level of detail can probably not be argued by principle, but rather needs to be trailed.
+
+
+      >>> 🔔 Parsimony vs detail: Should models aim for simplicity or for completeness? #simplicity-completeness | JUMP long-term-planning
+        There seems to be, with process models, a "natural" procession from starting as a highly simplified and abstract model, to becoming evermore enriched in detail and subprocesses. The proponents of complexification argue that thereby the model becomes more realistic and will therefore represent the system under more conditions. The opponents argue that such complexified models become unwieldy to run, fit and (sensitivity) analyse, and hence we don‘t really know what the model in its entirety represents (not to speak about the challenges involved with parameterisation, fitting or uncertainty analysis).<sup class="cite-ref" data-cite="Stainforth 2023"></sup> 
+        
+        <p>Both points of view are correct in their own way. Which point to take depends primarily on the specific goal of the prediction made with this model. The more academic-scientific the purpose, the more important are validation and uncertainty analysis, leaning towards simpler one-model-per-purpose models. The more the model is supposed to be an all-there-is-style repository of knowledge, the more complexification seems justified.</p> 
+        
+        Beyond such general considerations, here are the downsides of each approach:
+        
+        <i>Detailed model cons</i>: 
+        <ul>
+          <li> Parametrisation and model analysis (SA/UA) become ever more difficult to the point that they are not repeated for every model version. </li>
+          <li>For a model comprising dozens of modules and tens of parameters, justifying the specific value of any parameter, particularly the latent ones, becomes near impossible. The origin of functional relationships and their parameter values becomes obscured by history and revisions, and adding a new module strains the integrity of the full model. </li>
+          <li>Unit testing explodes in complexity and, all too often, sparser.</li>
+          <li>Maintaining a model with dozens of alternative formulations turns an environmental model into a software engineering task and fosters computer, not environmental thinking.</li>
+          <li>Dokumentation of the assumptions and limits is very hard, as the multidimensional parameter-space is typically not communicable (meaning that increasingly many parameter combinations become scientifically implausible).</li>
+          <li>While the aim is to represent many different system states, fewer and fewer of them can be validated in combination, making it unclear whether both modules and model are actually useful representations of the target system.</li>
+          <li>From experience it seems that the amount of "poorly written" code increases (arbitrary conditional module switches, hard-coded latent parameters, inefficient subroutines, mismatching resolutions between modules). This is because building a complicated model is really difficult (see <a href="https://en.wikipedia.org/wiki/Anna_Karenina_principle">Anna Karenina-principle</a>)!</li>
+        </ul>
+
+        <i>Parsimonious model cons</i>:<a id="footnote-parsimoniousModel" href="#footnote-1"><sup class="footnote-ref"></sup></a> 
+
+        <ul>
+          <li>The quality of the model (and hence the bias in its predictions) depends hugely on the data available, as they are the key source of determining the structural complexity.</li>
+          <li>Choosing a suitable likelihood (or other target function) becomes a crucially important step, moving the environmental expertise into second place behind statistical expertise.</li>
+          <li>Maintaining a zoo of different model formulations, or a master model with many module switches, becomes an engineering challenge.</li>
+        </ul>
+
+        In summary: In practice model development tends towards complexification; using more simple, single-purpose models might thus be worthwhile to see what the costs of such complexification are.
+
+      <hr>      
+      <p id="footnote-1"><sup>a</sup><span class="footnote-label"></span> This is about simple process models aiming at representing the real world with minimal process representation. This type of model is rare, and generalisations of its problems a bit more difficult. <a href="#footnote-parsimoniousModel">&#8617;</a></p>
+
+      >>> 🔔 Can the prediction provide the required accuracy and precision? #predictionAccuracyAsRequired | JUMP scenario-planing
+      When predictions are to be used by a decision maker, then efficiency demands that the predictions made are actually useful. This requires, as briefly sketched in <a href=#setting-stage>Stage 1</a>, that the decision maker is confronted with potential predictions: high and low values, high and very high uncertainty. If only a highly precise (low error) prediction with very high values will be useful for the decision maker, is it still worth the effort?
+
+      <small>Imagine a decision maker wants to know the maximal height of a river's water level in the next 50 years. If much higher than the city's defences, then the dike will have to be heightened. Since the building costs are huge, some homes would have to be demolished and some land dispossessed, only a prediction that exceeds the current flood defence would warrant such an intervention. A prediction of "+2m &#177; 3 m above current defence" would not satisfy the decision maker's demand.</small>
+
+      To save both decision maker and forecaster the frustrations of useless predictions, it is very necessary to dwell on this point before embarking on the long and tedious process of prediction.
+
+      Another aspect to consider is the legal status of approach and prediction. In some countries, forecasters use only specific "accredited" models for predictions, to reduce the chance of the prediction being rejected in court. That is not always desirable, for example when the accredited models are old and by now sub-standard (e.g. too low spatial resolution, wrong parameterisation, no uncertainty analysis). In this case, the decision maker has to decide whether to lean on the accredited model or on one that is more likely to be correct.
+
+      Finally, also if the purpose of the model is scientific, i.e. the decision maker in question are fellow scientists or the forecasters themselves, the usefulness question still stands. Is it worth exploring, say, these scenarios or situations by means of a model prediction? Will it allow us to separate two rival model formulations, or hypotheses about a process? If uncertainty in the prediction swamps differences between such two models, why bother making predictions? Additionally, the scientific community typically demands a higher level of reproducibility and state-of-the-art than a decision maker, since the goal is the progress of science, not a robust application of knowledge.
+      
+      In summary: Often predictions are very uncertain, and hence their usefulness is worth discussing intensively before embarking on a prediction cruise.
+      
+      >>> 🔔 Should predictions anticipate use by decision makers?
+      
+      <b>Sure</b>, if co-developed. That is: the user of the prediction together with the modeller specifies what to predict and which question this prediction should answer (see <a href=#setting-stage>Stage 1</a> for details). Thereby the eventual prediction is most like to be relevant and thus used.
+      
+      <b>Definitely not</b>, if solo productions of scientists. Decision making is a more complicated and nuanced process than modellers may consider, and well-intended academic predictions often pan out as irrelevant in a decision-making context. A more worrying problem arises if actual decision authority would move to non-legitimised scientists, representing a technocratic decision making process. (Think of politicians hiding behind scientist advice during the Corona pandemic. The scientist rarely made clear recommendations, but evaluated options. Yet the communication by politicians was as if the scientists gave precise advice.) This is incompatible with democracy and opens the doors to conflicts of interests and its well-documented biases.
+      
+      In summary: No; predictions are hard enough as they are, decision theory does not come into it unless explicitly demanded.
+
+
+      >>> 🔔 Should always multiple models be used for prediction?
+      
+      <p>This question has, at least, two dimension: (1) model averages improve predictions; and (2) using multiple models allows some quantification of model structural error (i.e. of our ignorance whether the important processes have been faithfully represented).</p>
+      
+      <p>Model averaging does two things to reduce prediction error<sup class="cite-ref" data-cite="Dormann 2018"></sup>: average predictions towards the mean<sup><a href="#footnote-unbiased-averages">a</a></sup>, and reduce the variance of the prediction <i>if</i> models do not agree perfectly. The relevant mathematical equation that illustrates this is the following:</p>
+
+      \[ \text{MSPE}(\widetilde{y}) = ( \sum_{m=1}^M w_m(\hat{y}_m - y^*)  )^2 + \sum_{m=1}^M \sum_{n=1}^M w_{mn} \rho_{mn} \sigma(\hat{y}_m) \sigma(\hat{y}_n),\]
+      
+      <p>where MSPE is the mean squared prediction error, the first term is the squared bias, i.e. the difference between model predictions and the truth (\(y^*\)) squared, and the second term is the prediction variance, based on each model's prediction uncertainty as well as the correlation between predictions (\(\rho_{mn}\)). From the equation it becomes clear that negatively correlated models will reduce prediction variance, thereby reducing forecasting error. In other words: having a maverick prediction in the mix is actually helpful! For completeness: as we may want to weight models based on their past performance, each model's weight \(w_m\) is also included.<sup class="cite-ref" data-cite="Dormann 2018"></sup> This advantage of having multiple models is well understood.</p>
+            
+      <p>The more contentious question is whether we should thus be coerced into having always multiple model predictions for our statements. The main reason against is that it is much more work. Typically forecasters are familiar with one model or modelling approach and for a good reason: their experience is that this model "works". Somewhat surprisingly, however, scientists from a different group rely for that same reason on <i>their</i> model. As long as both make the same predictions, fine. But what if they disagree? Would that not indicate that we cannot be sure of which model is more appropriate?
+      As it is, model inter-comparisons show that environmental predictions often differ substantially among models.<sup class="cite-ref" data-cite="Smith 2004"></sup> <sup class="cite-ref" data-cite="Cheaib 2012"></sup> <sup class="cite-ref" data-cite="Warszawski 2014"></sup> <sup class="cite-ref" data-cite="Frieler 2017"></sup> </p>
+      
+      <p>From the perspective of a decision maker, it may thus be important to quantify this model disagreement, such that they can take it into account. From the perspective of science it is interesting to realise where such disagreement arises and work towards resolving the underlying process discrepancies. The burden of running multiple models is being reduced by more standardised input/output procedures and support by LLMs. It may be worth also including some data-driven approaches as "process-ignorant" references, or use process/data-hybrid approaches to identify areas of potential improvement.<sup class="cite-ref" data-cite="Wesselkamp 2025"></sup> </p>
+
+      In summary: Yes; always multiple models should be used for prediction.
+
+      <hr>
+      <p id="footnote-unbiased-averages"><sup>a</sup>This presumes that model predictions either scatter around the correct value or that one model over- and the other underestimate, such that on average their predictions are unbiased. Since the truth is unknown, this is and will remain a very strong assumption. Maybe not rely on it too much.</p> 
+
 
       >>> 🔔 Validation needs to be planned: split data into MANY subsets | JUMP validation
       >>> 🔔 Upscale of microlevel processes | JUMP specify-model
@@ -392,7 +467,6 @@ The quality of predictions is currently unknown due to lack of uncertainty quant
       >>> 🔔 Calibration is really useful | JUMP model-inversion
       >>> 🔔 Uncertainty quantification is mandatory | JUMP best-answer
       >>> 🔔 Co-interpretation of results and their uncertainty: PDF, also on maps | JUMP communication
-      >>> 🔔 Should models be more detailed or fitted? Do we need microlevel representation?
       >>> 🔔 How to establish a moderated discussion to resolve or highlight differences?
 
 ## GLOSSARY
