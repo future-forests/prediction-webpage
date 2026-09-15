@@ -5,7 +5,7 @@ function parseContent(raw) {
     raw=el?el.textContent:'';
   }
   var lines=raw.split('\n');
-  var result={ intro:[], glossary:[], bones:[], phases:[] };
+  var result={ intro:[], sectionIds:{}, glossary:[], bones:[], phases:[] };
   var section=null, curPhase=null, curNode=null, curSub=null, curField=null;
 
   function flush(){ curField=null; }
@@ -100,7 +100,9 @@ function parseContent(raw) {
       continue;
     }
     if(line.indexOf('## ')===0){
-      section=trimVal(line.slice(3)).replace(/\s+#.*$/,'').toUpperCase();
+      var sectionMeta=splitDefinedId(trimVal(line.slice(3)));
+      section=sectionMeta.label.toUpperCase();
+      if(sectionMeta.id) result.sectionIds[section]=sectionMeta.id;
       curPhase=null; curNode=null; curSub=null; curField=null;
       continue;
     }

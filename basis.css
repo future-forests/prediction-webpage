@@ -320,23 +320,30 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--parchment);color:
   width:16px;height:16px;color:var(--ink-muted);
   flex-shrink:0;transition:transform .2s;
 }
-.card.open .chevron{transform:rotate(90deg)}
-.card-body{
+.card.open .chevron,
+.sub-item.open .sub-item-hd .chevron{transform:rotate(90deg)}
+.card-body,
+.sub-item-body{
   display:block;
-  padding:0 14px;
-  border-top:0;
   max-height:0;
   opacity:0;
   overflow:hidden;
   pointer-events:none;
 }
-.card.open .card-body{
-  padding:4px 14px 14px;
-  border-top:1px solid var(--rule);
+.card-body{
+  padding:0 14px;
+  border-top:0;
+}
+.card.open .card-body,
+.sub-item.open .sub-item-body{
   max-height:none;
   opacity:1;
   overflow:visible;
   pointer-events:auto;
+}
+.card.open .card-body{
+  padding:4px 14px 14px;
+  border-top:1px solid var(--rule);
 }
 .card-body p{
   font-size:.845rem;color:var(--ink-mid);
@@ -367,16 +374,20 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--parchment);color:
 /* ── SUB-ITEMS (expandable method rows) ─────────────────── */
 .sub-list{list-style:none;margin:8px 0 0}
 .sub-item{
-  display:flex;align-items:flex-start;gap:9px;
-  padding:7px 10px;background:#fff;
+  background:#fff;
   border-radius:6px;border:1px solid var(--rule);
-  font-size:.82rem;cursor:default;margin-bottom:4px;
+  font-size:.82rem;margin-bottom:4px;overflow:hidden;
   transition:background .1s;
 }
-.sub-item:hover{background:var(--parchment2)}
-.si-icon{flex-shrink:0;margin-top:1px;font-size:.95rem}
-.si-body{flex:1}
-.si-name{font-weight:600;color:var(--ink)}
+.sub-item-hd{
+  display:flex;align-items:center;gap:9px;
+  padding:7px 10px;cursor:pointer;user-select:none;
+}
+.sub-item-hd:hover{background:var(--parchment2)}
+.sub-item-body{padding:0 10px}
+.sub-item.open .sub-item-body{padding:0 10px 10px}
+.si-icon{flex-shrink:0;font-size:.95rem}
+.si-name{font-weight:600;color:var(--ink);flex:1}
 .si-desc{color:var(--ink-muted);font-size:.76rem;margin-top:1px}
 .si-desc p{margin:4px 0 0;line-height:1.5}
 .si-desc p:first-child{margin-top:2px}
@@ -471,6 +482,10 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--parchment);color:
 
 .cite-tooltip.is-pinned{
   box-shadow:0 6px 24px rgba(0,0,0,.28);
+}
+
+.detail-overlay-card .cite-tooltip{
+  z-index:5;
 }
 
 .cite-tooltip a{
@@ -821,6 +836,27 @@ body.embedded-detail a{
 body.detail-page a:hover,
 body.embedded-detail a:hover{
   color:var(--green-deep);
+}
+
+body.detail-page .footnotes,
+body.embedded-detail .footnotes{
+  margin-top:28px;
+  padding-top:16px;
+  border-top:1px solid var(--rule);
+  font-size:.78rem;
+  color:var(--ink-mid);
+  line-height:1.55;
+}
+
+body.detail-page .footnotes ol,
+body.embedded-detail .footnotes ol{
+  margin:0;
+  padding-left:1.4em;
+}
+
+body.detail-page .footnote-ref,
+body.embedded-detail .footnote-ref{
+  color:var(--green-mid);
 }
 
 /* ── SVG CONNECTOR OVERLAY (document-anchored: scrolls with the page) ── */

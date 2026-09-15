@@ -29,78 +29,6 @@ function renderRichText(text){
   return chunks.map(function(part){ return '<p>'+part+'</p>'; }).join('');
 }
 
-function renderDetailContent(raw){
-  if(raw==null) return '';
-  var lines=raw.split('\n');
-  var html='';
-  var curField=null;
-  var curText='';
-
-  function trimVal(s){ return s.replace(/^\s+|\s+$/g,''); }
-
-  function flushField(){
-    if(!curText){
-      curField=null;
-      return;
-    }
-    if(curField==='example'){
-      html+='<div class="example">'+renderRichText(curText)+'</div>';
-    }else if(curField==='important'){
-      html+='<div class="important">'+renderRichText(curText)+'</div>';
-    }else{
-      html+=renderRichText(curText);
-    }
-    curText='';
-    curField=null;
-  }
-
-  function appendLine(line){
-    if(!curText) curText=line;
-    else if(curField==='example'||curField==='important') curText+=' '+line;
-    else curText+='\n\n'+line;
-  }
-
-  for(var i=0;i<lines.length;i++){
-    var line=trimVal(lines[i]);
-    if(line===''){
-      if(curField==='example'||curField==='important') curText+='\n\n';
-      else if(curText) curText+='\n\n';
-      continue;
-    }
-    if(line==='---'){
-      flushField();
-      html+='<hr>';
-      continue;
-    }
-    if(line.indexOf('## ')===0){
-      flushField();
-      html+='<h2>'+trimVal(line.slice(3))+'</h2>';
-      continue;
-    }
-    if(line.indexOf('### ')===0){
-      flushField();
-      html+='<h3>'+trimVal(line.slice(4))+'</h3>';
-      continue;
-    }
-    if(line.indexOf('EXAMPLE ')===0||line==='EXAMPLE'){
-      flushField();
-      curText=line==='EXAMPLE'?'':'<strong>'+trimVal(line.slice(8))+'</strong>';
-      curField='example';
-      continue;
-    }
-    if(line.indexOf('IMPORTANT ')===0||line==='IMPORTANT'){
-      flushField();
-      curText=line==='IMPORTANT'?'':'<strong>'+trimVal(line.slice(10))+'</strong>';
-      curField='important';
-      continue;
-    }
-    if(!curField) curField='body';
-    appendLine(line);
-  }
-  flushField();
-  return html;
-}
-
 function renderRoleTag(role){
   return role?'<span class="role-tag">'+escapeAttr(role)+'</span>':'';
 }
@@ -109,18 +37,29 @@ function renderOptionalBlock(text, className){
   return isPlaceholder(text)?'':'<div class="'+className+'">'+renderRichText(text)+'</div>';
 }
 
+function renderCollapsibleSubItem(s, opts){
+  opts=opts||{};
+  var leafId=s.id||(opts.fallbackPrefix||'item')+'-'+(opts.index!=null?opts.index:0);
+  var jump=opts.jumpHtml||'';
+  var style=opts.bgWhite?' style="background:var(--parchment)"':'';
+  var html='<div class="sub-item" id="'+escapeAttr(leafId)+'"'+style+'>';
+  html+='<div class="sub-item-hd">';
+  if(s.icon) html+='<span class="si-icon">'+s.icon+'</span>';
+  html+='<span class="si-name">'+s.name+renderRoleTag(s.role)+jump+'</span>';
+  html+='<svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
+  html+='</div>';
+  html+='<div class="sub-item-body" hidden="until-found">';
+  if(!isPlaceholder(s.desc)) html+='<div class="si-desc">'+renderRichText(s.desc)+'</div>';
+  html+=renderDetailsButton(leafId,s.name);
+  html+='</div></div>';
+  return html;
+}
+
 function renderSubItems(items, bgWhite){
   if(!items||!items.length) return '';
   var html='<ul class="sub-list">';
   for(var i=0;i<items.length;i++){
-    var s=items[i], subLeafId=s.id||('item-'+i);
-    html+='<li><div class="sub-item" id="'+escapeAttr(subLeafId)+'" '+(bgWhite?'style="background:var(--parchment)"':'')+'>';
-    if(s.icon) html+='<span class="si-icon">'+s.icon+'</span>';
-    html+='<div class="si-body">';
-    html+='<div class="si-name">'+s.name+renderRoleTag(s.role)+'</div>';
-    if(!isPlaceholder(s.desc)) html+='<div class="si-desc">'+renderRichText(s.desc)+'</div>';
-    html+=renderDetailsButton(subLeafId,s.name);
-    html+='</div></div></li>';
+    html+='<li>'+renderCollapsibleSubItem(items[i],{ bgWhite:bgWhite, fallbackPrefix:'item', index:i })+'</li>';
   }
   return html+'</ul>';
 }
@@ -190,15 +129,9 @@ function renderBones(items){
   if(!items||!items.length) return '';
   var html='<ul class="sub-list bones-list">';
   for(var i=0;i<items.length;i++){
-    var s=items[i], leafId=s.id||('bone-'+i);
-    html+='<li><div class="sub-item" id="'+escapeAttr(leafId)+'">';
-    if(s.icon) html+='<span class="si-icon">'+s.icon+'</span>';
-    html+='<div class="si-body">';
+    var s=items[i];
     var jump=s.jump?' <a href="#'+escapeAttr(s.jump)+'" class="bones-jump">&rarr;</a>':'';
-    html+='<div class="si-name">'+s.name+jump+'</div>';
-    if(!isPlaceholder(s.desc)) html+='<div class="si-desc">'+renderRichText(s.desc)+'</div>';
-    html+=renderDetailsButton(leafId,s.name);
-    html+='</div></div></li>';
+    html+='<li>'+renderCollapsibleSubItem(s,{ fallbackPrefix:'bone', index:i, jumpHtml:jump })+'</li>';
   }
   return html+'</ul>';
 }
