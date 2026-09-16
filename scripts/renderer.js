@@ -21,12 +21,14 @@ function hasBlockHtml(text){
 
 function renderRichText(text){
   if(!text) return '';
-  if(hasBlockHtml(text)) return text;
   var chunks=text
     .split(/\n\s*\n/)
     .map(function(part){ return part.replace(/\s*\n\s*/g,' ').trim(); })
     .filter(function(part){ return part!==''; });
-  return chunks.map(function(part){ return '<p>'+part+'</p>'; }).join('');
+  return chunks.map(function(part){
+    if(hasBlockHtml(part)) return part;
+    return '<p>'+part+'</p>';
+  }).join('');
 }
 
 function renderRoleTag(role){
