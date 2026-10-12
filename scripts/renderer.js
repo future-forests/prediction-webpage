@@ -1,4 +1,4 @@
-var PAGE_COLORS={ c1:'#2d6a4f', c2:'#1a5276', c3:'#6c3483', c4:'#b7471c', c5:'#117a65' };
+var PAGE_COLORS=PHASE_ACCENT_HEX;
 
 function escapeAttr(value){
   return String(value)
@@ -10,6 +10,10 @@ function escapeAttr(value){
 }
 
 function isPlaceholder(text){ return !text||text.trim()===''||text.trim()==='[text]'; }
+
+function outlineTitle(num, html){
+  return num?'<span class="outline-num">'+num+'</span> '+html:(html||'');
+}
 
 function renderDetailsButton(leafId, title){
   return '<div class="details-row"><button class="more-details-btn" type="button" data-detail-id="'+escapeAttr(leafId)+'" data-detail-title="'+escapeAttr(title||leafId)+'">More details</button></div>';
@@ -47,7 +51,7 @@ function renderCollapsibleSubItem(s, opts){
   var html='<div class="sub-item" id="'+escapeAttr(leafId)+'"'+style+'>';
   html+='<div class="sub-item-hd">';
   if(s.icon) html+='<span class="si-icon">'+s.icon+'</span>';
-  html+='<span class="si-name">'+s.name+renderRoleTag(s.role)+jump+'</span>';
+  html+='<span class="si-name">'+outlineTitle(s.outlineNum,s.name)+renderRoleTag(s.role)+jump+'</span>';
   html+='<svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>';
   html+='</div>';
   html+='<div class="sub-item-body" hidden="until-found">';
@@ -82,7 +86,7 @@ function renderNodeBody(node){
 function renderNode(node, color){
   return '<div class="card" id="'+node.id+'" style="border-left-color:'+color+'">'
     +'<div class="card-hd">'
-    +'<span class="card-title">'+node.title+renderRoleTag(node.role)+'</span>'
+    +'<span class="card-title">'+outlineTitle(node.outlineNum,node.title)+renderRoleTag(node.role)+'</span>'
     +'<svg class="chevron" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>'
     +'</div>'
     +'<div class="card-body" hidden="until-found">'+renderNodeBody(node)+'</div></div>';
@@ -95,7 +99,7 @@ function renderPhase(phase){
   var ratHtml=isPlaceholder(phase.rationale)?''
     :'<div class="rationale"><span class="rat-label">Rationale</span><div class="rat-text">'+renderRichText(phase.rationale)+'</div></div>';
 
-  return '<section class="phase collapsed" id="'+phase.id+'" style="border-top-color:'+color+'">'
+  return '<section class="phase collapsed" id="'+phase.id+'" style="border-top-color:'+color+';--phase-accent:'+color+'">'
     +'<div class="phase-hd">'
     +'<div class="phase-num-badge" style="background:'+color+'">'+phase.phaseNum+'</div>'
     +'<h2 class="phase-title">'+phase.title+'</h2>'

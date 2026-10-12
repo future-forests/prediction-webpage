@@ -312,6 +312,47 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--parchment);color:
   padding:11px 14px;cursor:pointer;user-select:none;
 }
 .card-hd:hover{background:rgba(0,0,0,0.013)}
+.outline-num{
+  display:inline-block;
+  flex-shrink:0;
+  font-family:'Inter',system-ui,sans-serif;
+  font-size:.68rem;
+  font-weight:700;
+  font-variant-numeric:tabular-nums;
+  letter-spacing:.04em;
+  line-height:1.25;
+  color:var(--phase-accent, var(--green-mid));
+  background:color-mix(in srgb, var(--phase-accent, var(--green-mid)) 13%, #fff);
+  border:1px solid color-mix(in srgb, var(--phase-accent, var(--green-mid)) 38%, transparent);
+  padding:2px 8px;
+  border-radius:999px;
+  margin-right:.4em;
+  vertical-align:middle;
+  box-shadow:0 1px 0 rgba(255,255,255,.65) inset;
+}
+.sub-item .outline-num{
+  font-size:.6rem;
+  font-weight:600;
+  letter-spacing:.03em;
+  padding:1px 6px;
+}
+.card-title .outline-num,
+.si-name .outline-num{
+  position:relative;
+  top:-.06em;
+}
+body.detail-page .outline-num,
+body.embedded-detail .outline-num,
+.detail-overlay-body .outline-num{
+  font-size:.62rem;
+  padding:1px 7px;
+}
+body.detail-page h2 .outline-num,
+body.embedded-detail h2 .outline-num,
+.detail-overlay-body h2 .outline-num{
+  font-size:.58rem;
+  margin-right:.5em;
+}
 .card-title{
   font-family:'Lora',serif;font-size:.92rem;
   font-weight:600;flex:1;color:var(--ink);
