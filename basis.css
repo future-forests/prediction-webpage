@@ -260,7 +260,7 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--parchment);color:
   width:18px;height:18px;color:var(--ink-muted);
   flex-shrink:0;transition:transform .2s;margin-left:6px;
 }
-.phase.collapsed .phase-chev{transform:rotate(-90deg)}
+.phase:not(.collapsed) .phase-chev{transform:rotate(90deg)}
 .phase-nodes{
   padding:0 20px 18px;
   max-height:none;
@@ -361,8 +361,8 @@ body.embedded-detail h2 .outline-num,
   width:16px;height:16px;color:var(--ink-muted);
   flex-shrink:0;transition:transform .2s;
 }
-.card.open .chevron,
-.sub-item.open .sub-item-hd .chevron{transform:rotate(90deg)}
+.card.open>.card-hd .chevron,
+.sub-item.open>.sub-item-hd .chevron{transform:rotate(90deg)}
 .card-body,
 .sub-item-body{
   display:block;
@@ -589,7 +589,7 @@ body > p[id^="footnote-"] .footnote-label{
   width:18px;height:18px;color:var(--ink-muted);
   flex-shrink:0;transition:transform .2s;margin-left:8px;
 }
-.sec-title.collapsed .sec-chev{transform:rotate(-90deg)}
+.sec-title:not(.collapsed) .sec-chev{transform:rotate(90deg)}
 .sec-collapsed{
   max-height:0;
   opacity:0;
