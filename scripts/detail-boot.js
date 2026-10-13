@@ -18,18 +18,19 @@ function mountDetailPage(){
   var id=params.get('id');
   if(!id) return;
 
-  loadDetail(id).then(function(raw){
+  Promise.all([loadPageContent('../webpage.html'), loadDetail(id)]).then(function(results){
+    window.OUTLINE_BY_ID=(parseContent(results[0]).outlineById)||{};
+    var raw=results[1];
     if(isDetailPlaceholder(raw)){
       document.body.innerHTML='<p style="color:var(--ink-muted);font-style:italic">No detail content found for <code>'+id+'</code>.</p>';
       return;
     }
-    var title=mountDetail({
-      raw:raw,
-      target:document.body,
-      fallbackTitle:id
-    });
+    var title=mountDetail({ id:id, raw:raw, target:document.body, fallbackTitle:id });
     if(title) document.title=title;
     bindStandaloneDetailLinks(document.body);
+  }).catch(function(err){
+    console.error(err);
+    document.body.innerHTML='<p style="color:var(--ink-muted);font-style:italic">Could not load page data.</p>';
   });
 }
 

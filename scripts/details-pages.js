@@ -69,6 +69,7 @@ function openDetailOverlay(id, fallbackTitle){
       return;
     }
     var title=mountDetail({
+      id:id,
       raw:raw,
       target:bodyEl,
       fallbackTitle:fallbackTitle

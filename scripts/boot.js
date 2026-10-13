@@ -15,6 +15,7 @@ function appendSectionDetails(id, title, contentEl, anchorEl){
 
 function renderAll(raw){
   var data=parseContent(raw);
+  window.OUTLINE_BY_ID=data.outlineById||{};
   var sectionIds=data.sectionIds||{};
 
   var introBody=document.getElementById('intro-body');
@@ -72,24 +73,8 @@ function showContentLoadError(err){
   }
 }
 
-function extractPageContent(raw){
-  var match=raw.match(/^## INTRO\b/m);
-  return match?raw.slice(match.index):raw;
-}
-
-function loadPageContent(){
-  return fetch('webpage.html').then(function(res){
-    if(!res.ok) throw new Error('HTTP '+res.status+' loading webpage.html');
-    return res.text();
-  }).then(function(html){
-    var doc=new DOMParser().parseFromString(html,'text/html');
-    var el=doc.getElementById('page-content');
-    return extractPageContent(el?el.textContent:html);
-  });
-}
-
 document.addEventListener('DOMContentLoaded',function(){
-  loadPageContent().then(renderAll).catch(showContentLoadError);
+  loadPageContent('webpage.html').then(renderAll).catch(showContentLoadError);
 });
 document.addEventListener('beforematch',function(e){
   revealCollapsedForSearch(e.target);
