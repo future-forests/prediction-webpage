@@ -46,7 +46,7 @@ Most interesting, from a scientific point of view, are the situations when the d
 
 ### Optimisation algorithms
 
-In the simplest case, a model can be inverted using optimisation (e.g. quasi-Newton approaches, or Nelder-Mead). Already as slightly more complex models, stochastic approaches become more efficient at evaluting the large parameter space (e.g. Genetic Algorithms, Stochastic Gradient Descent). Very robust, but also relatively inefficient, are MCMC-based approaches in a Bayesian framework.[@Dietze 2017]
+In the simplest case, a model can be inverted using optimisation (e.g. quasi-Newton approaches, or Nelder-Mead). Already as slightly more complex models, stochastic approaches become more efficient at evaluating the large parameter space (e.g. Genetic Algorithms, Stochastic Gradient Descent). Very robust, but also relatively inefficient, are MCMC-based approaches in a Bayesian framework.[@Dietze 2017]
 
 When the model itself is stochastic, optimisation becomes even more complicated, as the same parameter combination will yield different estimates of \(\hat{y}\). Such situations are addressed by Approximate Bayesian Computation[@Sisson 2018] or synthetic likelihood.[@Wood 2010] These approaches are still developing, also under the title of "pattern-oriented modelling"[@Grimm 2005], and deep-learning approaches may additionally make parameter estimation more efficient.[@Baragatti 2026]
 
