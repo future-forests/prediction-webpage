@@ -93,17 +93,17 @@ Newcomers may want orientation, this resource aims to provide it.
     ROLE  Stakeholder
     TEXT The prediction target is defined <i>jointly</i> by stakeholder and modeller, to ensure that the prediction is useful to the stakeholder and feasible as model target.
 
-    For example, a stakeholder may want to know the effect of building a dam on malaria infection rates, but the modeller has no ability to quantify malaria transmissions near stagnant water bodies. Then a prediction task seems infeasible 🛑
+    For example, a stakeholder may want to know the effect of building a dam on malaria infection rates, but the modeller has no ability to quantify malaria transmissions near stagnant water bodies. Then a prediction task seems infeasible: <img src="logos/STOP.png" height="15" width="15" /> 
 
     --- Target that can be modelled and observed #target-modelled
     TEXT The prediction target has to be <i>observable</i> in order to allow comparison of model and real world. (For example, "environmental health" is no suitable target of a model prediction, while "bird species richness" or "tick density" are. Vague targets indicate unclear question and lead to arbitrary decisions.)
 
-    At this point, also the precision required should be specified. Is it enough to know the flooding level up to a 95%-confidence interval of 1 m? Would knowing the distribution of an introduced mosquito carrying an infectious disease to the nearest 50 km x 50 km pixel on a map be sufficient? If not: 🛑
+    At this point, also the precision required should be specified. Is it enough to know the flooding level up to a 95%-confidence interval of 1 m? Would knowing the distribution of an introduced mosquito carrying an infectious disease to the nearest 50 km x 50 km pixel on a map be sufficient? If not: <img src="logos/STOP.png" height="15" width="15" />
 
     --- Scenario planning: Are imaginable results useful to the question? #scenario-planning
     TEXT Stakeholders have to <i>imagine prediction</i> results and evaluate whether these would be useful to them (“What's the point of knowing the answer?”). Minimal useful prediction precision has to be specified. If it is not useful, there is no point in making the prediction.
 
-    For example, if a prediction is only useful if it shows unambiguously the superiority of solution A, then there is a high risk of the prediction being useless: uncertainty may be too large or A may not be the best solution, or only marginally so. Is it really useful? Or: if the decision is a foregone conclusion, predicting is a waste of time 🛑
+    For example, if a prediction is only useful if it shows unambiguously the superiority of solution A, then there is a high risk of the prediction being useless: uncertainty may be too large or A may not be the best solution, or only marginally so. Is it really useful? Or: if the decision is a foregone conclusion, predicting is a waste of time <img src="logos/STOP.png" height="15" width="15" />
 
     EXAMPLE 🪏 Worked example (fisheries)
     How much fish biomass can be extracted from this region of the ocean next year and remain below maximum sustainable yield?
@@ -114,10 +114,12 @@ Newcomers may want orientation, this resource aims to provide it.
   ROLE Modeller
   RATIONALE This step explores whether data and modelling approaches are available to allow predicting the system and target identified in the previous step to a degree useful for answering the question.
 
-    --- Are necessary <i>data of sufficient quality</i> are available? No: 🛑 #data-available
+    --- Are necessary <i>data of sufficient quality</i> available?  #data-available
     TEXT Data requirements depend on the scale and precision of the desired prediction. When only rough estimates are needed, also coarse or older data may suffice. If a model needs to be developed, parameterised, and validated, there must be sufficient data for several iterations (see <a href=#long-term-planning>long-term planning</a>). When the model needs to be developed, data are required not only for the overall modelled state variable, but for each of the model's components or modules; if those are from other sources, can these sources be assumed to be useful for the question at hand?
 
     For example, if a tree-growth model uses a nutrient acquisition model from another tree in another ecosystem, possibly a local data set must be found to re-calibrate the module parameters and support model inversion.
+
+    If no data of sufficient quality are available: <img src="logos/STOP.png" height="15" width="15" />
 
     LINK validation
 
@@ -139,7 +141,7 @@ Newcomers may want orientation, this resource aims to provide it.
       >>> 👥 other #other
         [text]
 
-    TEXT If multiple approaches a possible: do we have resources to use several of them? If not, justify final choice (“everybody else uses it” is not a valid justification: <a target="_blank" href="https://en.wikipedia.org/wiki/Argumentum_ad_populum">argumentum ad populum</a>). Ideally, we additionally include a simple alternative approach (to quantify effect of model choice arbitrariness, model structural uncertainty.) Ensure that we have the necessary competence to implement the approach. Identify weaknesses of this approach and strategies to overcome them. Identify colleagues to help us. If this is all new to us: 🛑
+    TEXT If multiple approaches a possible: do we have resources to use several of them? If not, justify final choice (“everybody else uses it” is not a valid justification: <a target="_blank" href="https://en.wikipedia.org/wiki/Argumentum_ad_populum">argumentum ad populum</a>). Ideally, we additionally include a simple alternative approach (to quantify effect of model choice arbitrariness, model structural uncertainty.) Ensure that we have the necessary competence to implement the approach. Identify weaknesses of this approach and strategies to overcome them. Identify colleagues to help us. If this is all new to us: <img src="logos/STOP.png" height="15" width="15" />
 
     --- Specify required model characteristics #specify-model
     TEXT  The prediction purpose of <a href=#setting-stage>Stage 1</a> may be specific enough to narrow down the implementation with respect to the following characteristics. If not, here are few questions that may help select among the opposites listed below:
@@ -195,10 +197,10 @@ Newcomers may want orientation, this resource aims to provide it.
 
     The pipeline may be a simple script in a higher-level language or in bash; or it may link in formal <a target="_blank" href="https://en.wikipedia.org/wiki/Scientific_workflow_system">scientific workflow software</a>. Open-source software is preferable; versioning is mandatory.
 
-    This technical aspect is essential for running models thousands of times automatically, for using different training data sets, and applying the model to different input data. If no workflow can be established: 🛑
+    This technical aspect is essential for running models thousands of times automatically, for using different training data sets, and applying the model to different input data. If no workflow can be established: <img src="logos/STOP.png" height="15" width="15" />
 
     --- Identifying trustworthy models #identifying-models
-    TEXT These steps are <i>necessary</i> but not sufficient to develop trust in a model. If you cannot identify a model that can be trusted to make the prediction: 🛑
+    TEXT These steps are <i>necessary</i> but not sufficient to develop trust in a model. If you cannot identify a model that can be trusted to make the prediction: <img src="logos/STOP.png" height="15" width="15" />
 
     General references: <sup class="cite-ref" data-cite="Schmolke 2010"></sup> <sup class="cite-ref" data-cite="Getz 2018"></sup>
 
