@@ -1,11 +1,18 @@
 // Parse the source content into structured sections for the page renderer.
+var PHASE_ACCENT_HEX={ c1:'#2d6a4f', c2:'#1a5276', c3:'#6c3483', c4:'#b7471c', c5:'#117a65' };
+
+function phaseAccentFromOutline(num){
+  var phase=parseInt(String(num||'').split('.')[0],10);
+  return PHASE_ACCENT_HEX['c'+phase]||PHASE_ACCENT_HEX.c1;
+}
+
 function parseContent(raw) {
   if(raw==null){
     var el=document.getElementById('page-content');
     raw=el?el.textContent:'';
   }
   var lines=raw.split('\n');
-  var result={ intro:[], sectionIds:{}, glossary:[], bones:[], phases:[] };
+  var result={ intro:[], sectionIds:{}, glossary:[], bones:[], phases:[], outlineById:{} };
   var section=null, curPhase=null, curNode=null, curSub=null, curField=null;
 
   function flush(){ curField=null; }
@@ -224,5 +231,39 @@ function parseContent(raw) {
     if(!isKeyword(line)&&curField&&appendToCurrentField(line)) continue;
   }
 
+  attachOutlineNumbers(result.phases, result.outlineById);
   return result;
+}
+
+function attachOutlineNumbers(phases, byId){
+  for(var p=0;p<(phases||[]).length;p++){
+    var ph=phases[p], pn=String(ph.phaseNum);
+    if(ph.id) byId[ph.id]=pn;
+    for(var n=0;n<(ph.nodes||[]).length;n++){
+      var nd=ph.nodes[n], itemNum=pn+'.'+(n+1);
+      nd.outlineNum=itemNum;
+      if(nd.id) byId[nd.id]=itemNum;
+      var subs=nd.subItems||[];
+      for(var s=0;s<subs.length;s++){
+        subs[s].outlineNum=itemNum+'.'+(s+1);
+        if(subs[s].id) byId[subs[s].id]=subs[s].outlineNum;
+      }
+    }
+  }
+}
+
+function extractPageContent(raw){
+  var match=raw.match(/^## INTRO\b/m);
+  return match?raw.slice(match.index):raw;
+}
+
+function loadPageContent(url){
+  return fetch(url||'webpage.html').then(function(res){
+    if(!res.ok) throw new Error('HTTP '+res.status+' loading webpage.html');
+    return res.text();
+  }).then(function(html){
+    var doc=new DOMParser().parseFromString(html,'text/html');
+    var el=doc.getElementById('page-content');
+    return extractPageContent(el?el.textContent:html);
+  });
 }
