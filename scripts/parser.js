@@ -12,7 +12,7 @@ function parseContent(raw) {
     raw=el?el.textContent:'';
   }
   var lines=raw.split('\n');
-  var result={ intro:[], sectionIds:{}, glossary:[], bones:[], phases:[], outlineById:{} };
+  var result={ intro:[], sectionIds:{}, glossary:[], bones:[], attention:[], phases:[], outlineById:{} };
   var section=null, curPhase=null, curNode=null, curSub=null, curField=null;
 
   function flush(){ curField=null; }
@@ -39,6 +39,8 @@ function parseContent(raw) {
   }
 
   function isBonesSection(name){ return name==='BONES OF CONTENTION'; }
+  
+  function isAttentionSection(name){ return name==='Attention required'; }
 
   var FIELD_KEYS={
     rationale:'rationale',
@@ -47,7 +49,8 @@ function parseContent(raw) {
     example:'example',
     important:'important',
     'sub-desc':'desc',
-    'bones-desc':'desc'
+    'bones-desc':'desc',
+    'attention-desc':'desc'
   };
 
   function fieldTarget(){

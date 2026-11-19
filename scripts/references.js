@@ -1,6 +1,7 @@
 // Central bibliography used by the citation and reference tooltip system.
 window.BASIS_BIBLIO={
   'Akeret 2015': 'Akeret, J., Refregier, A., Amara, A., Seehars, S., & Hasner, C. (2015). Approximate Bayesian computation for forward modeling in cosmology. Journal of Cosmology and Astroparticle Physics, 2015, 043. https://doi.org/10.1088/1475-7516/2015/08/043',
+  'Augusiak 2014': 'Augusiak, J., Van den Brink, P. J., & Grimm, V. (2014). Merging validation and evaluation of ecological models to ‘evaludation’: A review of terminology and a practical approach. Ecological Modelling, Population Models for Ecological Risk Assessment of Chemicals, 280, 117–128. https://doi.org/10.1016/j.ecolmodel.2013.11.009',
   'Bahn 2013': 'Bahn, V., & McGill, B. J. (2013). Testing the predictive performance of distribution models. Oikos, 122(3), 321-331. https://doi.org/10.1111/j.1600-0706.2012.00299.x',
   'Baragatti 2026': 'Baragatti, M., Casenave, C., Cloez, B., Métivier, D., & Sanchez, I. (2026). Approximate Bayesian Computation with Deep Learning and conformal prediction. Journal of Computational and Graphical Statistics, 35(1), 443-460. https://doi.org/10.1080/10618600.2025.2546446',
   'Barber 2012':'Barber, D. (2012). Bayesian Reasoning and Machine Learning. Cambridge University Press',
