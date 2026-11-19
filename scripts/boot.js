@@ -39,6 +39,9 @@ function renderAll(raw){
   var highlightOut=document.getElementById('highlight-out');
   if(highlightOut) highlightOut.innerHTML=renderBones(data.bones);
   appendSectionDetails(sectionIds['BONES OF CONTENTION'],'Bones of Contention',document.getElementById('s-bones'),document.getElementById('bones'));
+  if(highlightOut) highlightOut.innerHTML=renderAttention(data.attention);
+  appendSectionDetails(sectionIds['Attention required'],'Attention required!',document.getElementById('s-attention'),document.getElementById('attention'));
+
 
   if(window.CitationTools){
     window.CitationTools.hydrate({
@@ -212,7 +215,7 @@ function setAllSectionsExpanded(expanded){
   var secTitles=document.querySelectorAll('.sec-title:not(.no-toggle)');
   for(var m=0;m<secTitles.length;m++) secTitles[m].classList.toggle('collapsed',!expanded);
 
-  var sections=document.querySelectorAll('#s-bones, #s-glossary, #s-references');
+  var sections=document.querySelectorAll('#s-bones, #s-attention, #s-glossary, #s-references');
   for(var n=0;n<sections.length;n++){
     sections[n].classList.toggle('sec-collapsed',!expanded);
     setFindHidden(sections[n],!expanded);

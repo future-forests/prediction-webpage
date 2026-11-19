@@ -14,7 +14,7 @@
 
   STRUCTURE — the start of a line decides what the line becomes:
 
-    ## SECTION     Top-level section. Only INTRO, PHASES, GLOSSARY and BONES OF CONTENTION are recognised.
+    ## SECTION     Top-level section. Only INTRO, PHASES, GLOSSARY, ATTENTION and BONES OF CONTENTION are recognised.
     === PHASE      Phase heading.
     --- ITEM       Collapsible card inside the current phase.
     >>> SUB-ITEM   Collapsible bullet inside the current item or under Bones of Contention.
@@ -40,17 +40,17 @@
     Cite a work with: <sup class="cite-ref" data-cite="Dormann 2026"></sup>
     The key must exist in scripts/references.js.
 
-  GLOSSARY (under ## GLOSSARY):
-
-    One entry per line: term | definition
-    Terms are underlined automatically wherever they appear in the text (once per paragraph).
-
   BONES OF CONTENTION:
 
     Same syntax as >>> sub-items inside cards:
       >>> Title text #my-id | JUMP target-card-id
         Optional summary text shown under the title.
     JUMP scrolls to a card or section on the page (red →). Use LINK only in phases for connector lines.
+
+  GLOSSARY (under ## GLOSSARY):
+
+    One entry per line: term | definition
+    Terms are underlined automatically wherever they appear in the text (once per paragraph).
 
   "MORE DETAILS" PAGES:
 
@@ -205,7 +205,7 @@ Newcomers may want orientation, this resource aims to provide it.
     General references: <sup class="cite-ref" data-cite="Schmolke 2010"></sup> <sup class="cite-ref" data-cite="Getz 2018"></sup>
 
       >>> ✅ Code verification/unit testing #code-verification
-        Coded models should be checked to be working correctly. This is important in model development (and there often referred to as <a target="_blank" href="https://en.wikipedia.org/wiki/Unit_testing">"unit testing"</a>), but also for users of models: we want to make sure that the model does what it is supposed to do.
+        Coded models should be checked to be working correctly. This is important in model development (and there often referred to as <a target="_blank" href="https://en.wikipedia.org/wiki/Unit_testing">"unit testing"</a>), but also for users of models: we want to make sure that the model does what it is supposed to do (including implementation verification and output verification<sup class="cite-ref" data-cite="Augusiak 2014"></sup>).
 
         The essential step to do so is by defining test cases, where the correct output of the model component is known; unless the model produces this known output, it is faulty. In advanced software development, unit testing is automatised and carried out after every major modification of code (e.g. for <a target="_blank" href="https://testthat.r-lib.org">R</a>, <a target="_blank" href="https://docs.python.org/3/library/unittest.html">Python</a>, <a target="_blank" href="https://www.geeksforgeeks.org/software-testing/embedded-c-cpp-unit-testing-basics">C++</a>). Unit testing is necessary but not sufficient for code verification; other elements of testing need to be considered as well (<a target="_blank" href="https://en.wikipedia.org/wiki/Software_testing">scalability, maintainability, performance</a>).
 
@@ -286,12 +286,14 @@ Newcomers may want orientation, this resource aims to provide it.
 
         In a more subtle way, non-independence also arises because modellers learn from each other, lean on common descriptions of a process, develop their model on the basis of a previous one and use the same global patterns as targets for their models. For any given process model, the data used <i>indirectly</i> to derive model formulations and parameters are unknown. This has two implications: (1) model comparisons can not be used to assess the validity of a model, as it is unknown how distant these two models actually are; (2) hindcasting-validation is thrown into doubt, as it is unclear how much of these "data from the past" have already informed the current model version.
 
-        <small>For example, the 2018 drought wave in central Europe exposed an inability of forest growth models to trace the observed dynamics.<sup class="cite-ref" data-cite="XXX"></sup> In response, forest growth modelling groups updapted the process descriptions in their model (pers. comm.). If now the 2018 observations can be approximated by hindcasting, this is <i>not</i> a proper validation, as the data have already been used to inform the model formulation or parameterisation.</small>
+        <small>For example, the 2018 drought wave in central Europe exposed an inability of forest growth models to trace the observed dynamics.<sup class="cite-ref" data-cite="Fischer 2025"></sup> In response, forest growth modelling groups updapted the process descriptions in their model (pers. comm.). If now the 2018 observations can be approximated by hindcasting, this is <i>not</i> a proper validation, as the data have already been used to inform the model formulation or parameterisation.</small>
 
         General references: <sup class="cite-ref" data-cite="Roberts 2017"></sup> <sup class="cite-ref" data-cite="Cerqueira 2020"></sup>
 
-        IMPORTANT 🔔 Validation needs to be planned: split data into MANY subsets.
+        IMPORTANT 🔔 Validation needs to be planned: split data into MANY subsets. 🔔  A model's credibility is boosted when independent research group validate it.
         LINK long-term-planning
+
+        IMPORTANT 🔔  A model's credibility is boosted when independent research group validate it.
 
       >>> 📝 Documentation of model: code, development, unit testing, validation, usage #documentation-model
         Documentation serves transparency of the science and use of the model. LLMs may be usefully employed to support documentation (particularly of code and use). In some fields, documentation standards exist (e.g. ODD<sup class="cite-ref" data-cite="Grimm 2010"></sup>; TRACE<sup class="cite-ref" data-cite="Schmolke 2010"></sup>).
@@ -461,8 +463,7 @@ Newcomers may want orientation, this resource aims to provide it.
 
       <hr>
       <p id="footnote-unbiased-averages"><sup>a</sup>This presumes that model predictions either scatter around the correct value or that one model over- and the other underestimate, such that on average their predictions are unbiased. Since the truth is unknown, this is and will remain a very strong assumption. Maybe not rely on it too much.</p> 
-
-
+<!---     
       >>> 🔔 Validation needs to be planned: split data into MANY subsets | JUMP validation
       >>> 🔔 Upscale of microlevel processes | JUMP specify-model
       >>> 🔔 Always use several models for structural uncertainty | JUMP uncertainty-decomp
@@ -470,6 +471,27 @@ Newcomers may want orientation, this resource aims to provide it.
       >>> 🔔 Uncertainty quantification is mandatory | JUMP best-answer
       >>> 🔔 Co-interpretation of results and their uncertainty: PDF, also on maps | JUMP communication
       >>> 🔔 How to establish a moderated discussion to resolve or highlight differences?
+-->
+
+
+
+## Attention required #attention
+
+      >>> 🔔 Principles for process model simplification
+
+      As mentioned in bones of contention above, process models tend to become more and more complex during development. How to counteract this trend? What are the principles by which parsimony can be introduced to identify model elements that should be deleted?
+
+      >>> 🔔  A concept of which uncertainty sources can be ignored for which prediction purpose
+      
+      The known unknown probability of a global ebola outbreak may contribute to a dystopian (but possible) scenario of the future, but it does not absolve us from including parameter uncertainty for short-term management advice in a “business as usual” scenario. In contrast, parameter uncertainty may be ignored when comparing predictions from many different models (under the assumptions that model structures introduce more uncertainty than parameters). A rigorous concept of when it is permissible to omit uncertainty estimates for one or the other source of uncertainty is missing.
+
+      >>> 🔔   Reports on stakeholder experience, particularly outside scientific publications, in order to help others to improve the science-decision interface
+
+      >>> 🔔  Develop advice on which model types are suitable for what kind of prediction
+
+      >>> 🔔  Develop a data platform that makes training and separately validation data available for many sites across the world, thereby facilitating model input harmonisation and model comparison
+
+
 
 ## GLOSSARY
 model | A flexible thing: can be a set of expert statements, a process model, or a deep-learning analysis.

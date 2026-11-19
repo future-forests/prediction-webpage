@@ -10,7 +10,11 @@ Keep the long-term view of science in mind.
 
 The quality of predictions is currently unknown due to lack of uncertainty quantification.
 
-Of course there are many sources of what is compiled here, and many efforts to make modelling and prediction more standardised. Here are some of those we found most helpful:
+The confusion, as it were, of the role of models in "earth science" was pointed out, long ago, in the seminal paper by Oreskes et al. (1994). The confusion remains. The point of models attempting to be applicable to the real world (in contrast to strategic "what-if" models which explore the effect of altering model assumptions) is to be of some use for prediction-users (decision makers, incl. scientists). A minimal requirement would seem to be that model predictions were confirmed in the real world (using the words of Oreskes et al. 1994).
+
+In practice, few environmental models outside meteorology went through the long and laborious tests defining the gold standard outlined on this web page. Lack of rigorous real-world confirmation must cause alarm bells to ring. 
+
+Of course there are many sources of what is compiled here, and many efforts to make modelling and prediction more standardised. We do not claim novelty, only a different focus. Here are some of those we found most helpful:
 
 - Lewis, A. S. L., Woelmer, W. M., Wander, H. L., Howard, D. W., Smith, J. W., McClure, R. P., Lofton, M. E., Hammond, N. W., Corrigan, R. S., Thomas, R. Q., & Carey, C. C. (2022). Increased adoption of best practices in ecological forecasting enables comparisons of forecastability. Ecological Applications, 32(2), e2500. https://doi.org/10.1002/eap.2500
 - Oreskes, N., Shrader-Frechette, K., & Belitz, K. (1994). Verification, validation, and confirmation of numerical models in the earth sciences. Science, 263(5147), 641-646. https://doi.org/10.1126/science.263.5147.641
