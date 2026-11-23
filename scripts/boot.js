@@ -39,9 +39,10 @@ function renderAll(raw){
   var highlightOut=document.getElementById('highlight-out');
   if(highlightOut) highlightOut.innerHTML=renderBones(data.bones);
   appendSectionDetails(sectionIds['BONES OF CONTENTION'],'Bones of Contention',document.getElementById('s-bones'),document.getElementById('bones'));
-  if(highlightOut) highlightOut.innerHTML=renderAttention(data.attention);
-  appendSectionDetails(sectionIds['Attention required'],'Attention required!',document.getElementById('s-attention'),document.getElementById('attention'));
 
+  var attentionOut=document.getElementById('attention-out');
+  if(attentionOut) attentionOut.innerHTML=renderAttention(data.attention);
+  appendSectionDetails(sectionIds['ATTENTION REQUIRED'],'Attention required!',document.getElementById('s-attention'),document.getElementById('attention'));
 
   if(window.CitationTools){
     window.CitationTools.hydrate({
@@ -56,13 +57,14 @@ function renderAll(raw){
   autoDefine(main,data.glossary);
   autoDefine(document.getElementById('intro-body'),data.glossary);
   autoDefine(highlightOut,data.glossary);
+  autoDefine(attentionOut,data.glossary);
   enableTapTooltips();
 
   buildSidebar(data.phases);
   collectConnectors(data.phases);
   initConnectorObserver(main);
   drawConnectors();
-  typesetMath([main, document.getElementById('intro-body'), highlightOut]).then(drawConnectors);
+  typesetMath([main, document.getElementById('intro-body'), highlightOut, attentionOut]).then(drawConnectors);
   document.dispatchEvent(new Event('basis-rendered'));
   if(window.location.hash) navigateToInPageTarget(window.location.hash);
 }

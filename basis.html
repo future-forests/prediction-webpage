@@ -38,7 +38,8 @@
 
 <header class="site-header">
   <div class="header-corner-links">
-    <a class="contrib-link" href="https://github.com/MartaWenta/prediction_webpage" target="_blank" rel="noopener noreferrer" aria-label="Contribute on GitHub">
+    <button type="button" class="citation-link" onclick="openCitationOverlay()">How to cite?</button>
+    <a class="contrib-link" href="https://github.com/future-forests/prediction-webpage" target="_blank" rel="noopener noreferrer" aria-label="Contribute on GitHub">
       <span class="contrib-label">Want to contribute?</span>
       <svg class="github-icon" viewBox="0 0 16 16" aria-hidden="true" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
     </a>
@@ -92,8 +93,32 @@
   </div>
 </dialog>
 
+<dialog id="citation-overlay" class="detail-overlay" aria-labelledby="citation-overlay-title">
+  <div class="detail-overlay-card citation-overlay-card">
+    <div class="detail-overlay-hd">
+      <h2 id="citation-overlay-title">How to cite</h2>
+      <button type="button" class="detail-overlay-close" onclick="closeCitationOverlay()" aria-label="Close citation information">×</button>
+    </div>
+    <div class="detail-overlay-body citation-overlay-body">
+      <h3>Suggested citation</h3>
+      <p>Dormann, C.F., Arif, S., Barney, J.N., Byrnes, J., Caplat, P., Chiuffo, M., Cousens, R., Damseaux, A., Domínguez-García, V., Flury, R., Graham, L., Hackett, T., Hülsmann, L., Ilaria, P., Käber, Y., Koerich, G., Lenzner, B., Lloret, F., Montes Peres, N., Paniw, M., Pilosof, S., Revilla, E., Roura Pascual, N., Shepherd, H., Simmonds, E., Tonkin, J., Traveset, A., Wenta, M., William, M., Zelnik, Y. and Zhemchuzhnikov, M. (2026). <i>Orientation for environmental predictions.</i> <a href="https://github.com/future-forests/prediction-webpage" target="_blank" rel="noopener noreferrer">GitHub repository</a>.</p>
+
+      <h3>BibTeX</h3>
+      <pre><code>@misc{orientation2026,
+  author = {Dormann, C. F. and Arif, S. and Barney, J. N. and Byrnes, J. and Caplat, P. and Chiuffo, M. and Cousens, R. and Damseaux, A. and Domínguez-García, V. and Flury, R. and Graham, L. and Hackett, T. and Hülsmann, L. and Ilaria, P. and Käber, Y. and Koerich, G. and Lenzner, B. and Lloret, F. and Montes Peres, N. and Paniw, M. and Pilosof, S. and Revilla, E. and Roura Pascual, N. and Shepherd, H. and Simmonds, E. and Tonkin, J. and Traveset, A. and Wenta, M. and William, M. and Zelnik, Y. and Zhemchuzhnikov, M.},
+  title = {Orientation for environmental predictions},
+  year = {2026},
+  url = {https://github.com/future-forests/prediction-webpage},
+  note = {Also available at: \url{https://future-forests.github.io/prediction-webpage/basis.html}}
+}</code></pre>
+
+      <h3>Contribute</h3>
+      <p>To contribute, open a pull request in the <a href="https://github.com/future-forests/prediction-webpage" target="_blank" rel="noopener noreferrer">project repository</a> or contact the first author. Substantial contributions will be included in the author list.</p>
+    </div>
+  </div>
+</dialog>
+
 <div class="wrap">
-  
   <h2 class="sec-title collapsed" id="bones" data-sec="s-bones">
     Bones of Contention
     <svg class="sec-chev" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -102,23 +127,14 @@
     <p class="sec-sub">Contested issues, where the jury is still out.</p>
     <div id="highlight-out"></div>
   </div>
-
-
-
-
   <h2 class="sec-title collapsed" id="attention" data-sec="s-attention">
     Attention required!
     <svg class="sec-chev" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </h2>
   <div id="s-attention" class="sec-collapsed" hidden="until-found">
     <p class="sec-sub">Requiring research and community input.</p>
-    <div id="highlight-out"></div>
+    <div id="attention-out"></div>
   </div>
-  
-
-
-
-
   <h2 class="sec-title collapsed" id="glossary" data-sec="s-glossary">
     Glossary
     <svg class="sec-chev" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
@@ -127,12 +143,10 @@
     <p class="sec-sub">Definitions for all technical terms used in this resource.</p>
     <div class="glos-grid" id="glos-out"></div>
   </div>
-  
   <h2 class="sec-title collapsed" id="references" data-sec="s-references">
     References
     <svg class="sec-chev" viewBox="0 0 20 20" fill="none"><path d="M7 5l5 5-5 5" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
   </h2>
-  
   <div id="s-references" class="sec-collapsed" hidden="until-found">
     <div class="refs-list" id="refs-out"></div>
   </div>
@@ -140,23 +154,6 @@
 
 <footer>
   <p class="footer-ack-title">Acknowledgements</p>
-
-  <p align="left">To cite this webpage, please use this dynamic list of contributors: <br>
-    Dormann, C.F., Arif, S., Barney, J.N., Byrnes, J., Caplat, P., Chiuffo, M., Cousens, R., Damseaux, A., Domínguez-García, V., Flury, R., Graham, L., Hackett, T., Hülsmann, L., Ilaria, P., Käber, Y., Koerich, G., Lenzner, B., Lloret, F., Montes Peres, N., Paniw, M., Pilosof, S., Revilla, E., Roura Pascual, N., Shepherd, H., Simmonds, E., Tonkin, J., Traveset, A., Wenta, M., William, M., Zelnik, Y., Zhemchuzhnikov, M. (2026) Orientation for environmental predictions. https://github.com/future-forests/prediction-webpage and https://future-forests.github.io/prediction-webpage/basis.html.</p> 
-
-  <p align="left">Or in BibTeX-style:</p>
-
-  <p style="font-family: 'Courier New', Courier, monospace; text-align: left; padding-left: 2em; text-indent: -2em;" align="left">  @misc{orientation2026,<br>
-    author = {Dormann, C. F. and Arif, S. and Barney, J. N. and Byrnes, J. and Caplat, P. and Chiuffo, M. and Cousens, R. and Damseaux, A. and Dom\'{i}nguez-Garc\'{i}a, V. and Flury, R. and Graham, L. and Hackett, T. and H\"{u}lsmann, L. and Ilaria, P. and K\"{a}ber, Y. and Koerich, G. and Lenzner, B. and Lloret, F. and Montes Peres, N. and Paniw, M. and Pilosof, S. and Revilla, E. and Roura Pascual, N. and Shepherd, H. and Simmonds, E. and Tonkin, J. and Traveset, A. and Wenta, M. and William, M. and Zelnik, Y. and Zhemchuzhnikov, M.},<br>
-  title = {Orientation for environmental predictions},<br>
-  year = {2026},<br>
-  url = {https://github.com/future-forests/prediction-webpage},<br>
-  note = {Also available at: \url{https://future-forests.github.io/prediction-webpage/basis.html}}<br>
-}</p>
-  
-  <p align="left">If you like to contribute, please do so by git pull request at https://github.com/future-forests/prediction-webpage or by sending an email to the first author. Substantial contributions leads to inclusing in the above list of authors.</p>
-
-
   <p class="footer-ack-links">
     <a href="https://andinaspain2026.com/" target="_blank" rel="noopener noreferrer">ANDINA</a>
     -

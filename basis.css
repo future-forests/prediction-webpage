@@ -90,10 +90,13 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--parchment);color:
   gap:8px;
 }
 .contrib-link,
+.citation-link,
 .ff-corner-logo{
   display:flex;
   align-items:center;
   justify-content:center;
+  box-sizing:border-box;
+  min-height:34px;
   padding:4px 8px;
   border-radius:8px;
   background:rgba(255,255,255,0.9);
@@ -103,16 +106,23 @@ body{font-family:'Inter',system-ui,sans-serif;background:var(--parchment);color:
   transition:background .15s,box-shadow .15s;
 }
 .contrib-link:hover,
+.citation-link:hover,
 .ff-corner-logo:hover{
   background:#fff;
   box-shadow:0 3px 10px rgba(0,0,0,0.18);
 }
-.contrib-link{
+.contrib-link,
+.citation-link{
   gap:6px;
   color:var(--green-deep);
   font-size:.72rem;
   font-weight:600;
   letter-spacing:.02em;
+}
+.citation-link{
+  font-family:'Inter',sans-serif;
+  white-space:nowrap;
+  cursor:pointer;
 }
 .contrib-label{white-space:nowrap}
 .github-icon{
@@ -748,6 +758,43 @@ footer a:hover{text-decoration:underline}
     radial-gradient(circle at 20% 0%, rgba(82,183,136,0.06), transparent 32%),
     linear-gradient(180deg, rgba(255,255,255,0.35), rgba(255,255,255,0));
 }
+.citation-overlay-card{
+  width:min(820px,calc(100vw - 24px));
+  height:auto;
+  max-height:calc(100vh - 24px);
+}
+.citation-overlay-body h3{
+  margin:0 0 8px;
+  font-family:'Lora',serif;
+  font-size:.95rem;
+  color:var(--green-deep);
+}
+.citation-overlay-body p+h3,
+.citation-overlay-body pre+h3{
+  margin-top:28px;
+}
+.citation-overlay-body p{
+  margin:0;
+  color:var(--ink-mid);
+  font-size:.84rem;
+  line-height:1.7;
+}
+.citation-overlay-body a{
+  color:var(--green-mid);
+}
+.citation-overlay-body pre{
+  margin:0;
+  padding:16px;
+  overflow:auto;
+  border:1px solid var(--rule);
+  border-radius:8px;
+  background:rgba(245,240,232,.72);
+  color:var(--ink-mid);
+  font-size:.74rem;
+  line-height:1.55;
+  white-space:pre-wrap;
+  overflow-wrap:anywhere;
+}
 body.detail-overlay-open{
   overflow:hidden;
 }
@@ -925,7 +972,8 @@ body.show-links #connector-svg{display:block}
     right:10px;
     gap:6px;
   }
-  .contrib-link{
+  .contrib-link,
+  .citation-link{
     font-size:.66rem;
     padding:4px 6px;
     gap:4px;
