@@ -14,7 +14,7 @@
 
   STRUCTURE — the start of a line decides what the line becomes:
 
-    ## SECTION     Top-level section. Only INTRO, PHASES, GLOSSARY and BONES OF CONTENTION are recognised.
+    ## SECTION     Top-level section. Only INTRO, PHASES, GLOSSARY, ATTENTION and BONES OF CONTENTION are recognised.
     === PHASE      Phase heading.
     --- ITEM       Collapsible card inside the current phase.
     >>> SUB-ITEM   Collapsible bullet inside the current item or under Bones of Contention.
@@ -40,17 +40,17 @@
     Cite a work with: <sup class="cite-ref" data-cite="Dormann 2026"></sup>
     The key must exist in scripts/references.js.
 
-  GLOSSARY (under ## GLOSSARY):
-
-    One entry per line: term | definition
-    Terms are underlined automatically wherever they appear in the text (once per paragraph).
-
   BONES OF CONTENTION:
 
     Same syntax as >>> sub-items inside cards:
       >>> Title text #my-id | JUMP target-card-id
         Optional summary text shown under the title.
     JUMP scrolls to a card or section on the page (red →). Use LINK only in phases for connector lines.
+
+  GLOSSARY (under ## GLOSSARY):
+
+    One entry per line: term | definition
+    Terms are underlined automatically wherever they appear in the text (once per paragraph).
 
   "MORE DETAILS" PAGES:
 
@@ -205,7 +205,7 @@ Newcomers may want orientation, this resource aims to provide it.
     General references: <sup class="cite-ref" data-cite="Schmolke 2010"></sup> <sup class="cite-ref" data-cite="Getz 2018"></sup>
 
       >>> ✅ Code verification/unit testing #code-verification
-        Coded models should be checked to be working correctly. This is important in model development (and there often referred to as <a target="_blank" href="https://en.wikipedia.org/wiki/Unit_testing">"unit testing"</a>), but also for users of models: we want to make sure that the model does what it is supposed to do.
+        Coded models should be checked to be working correctly. This is important in model development (and there often referred to as <a target="_blank" href="https://en.wikipedia.org/wiki/Unit_testing">"unit testing"</a>), but also for users of models: we want to make sure that the model does what it is supposed to do (including implementation verification and output verification<sup class="cite-ref" data-cite="Augusiak 2014"></sup>).
 
         The essential step to do so is by defining test cases, where the correct output of the model component is known; unless the model produces this known output, it is faulty. In advanced software development, unit testing is automatised and carried out after every major modification of code (e.g. for <a target="_blank" href="https://testthat.r-lib.org">R</a>, <a target="_blank" href="https://docs.python.org/3/library/unittest.html">Python</a>, <a target="_blank" href="https://www.geeksforgeeks.org/software-testing/embedded-c-cpp-unit-testing-basics">C++</a>). Unit testing is necessary but not sufficient for code verification; other elements of testing need to be considered as well (<a target="_blank" href="https://en.wikipedia.org/wiki/Software_testing">scalability, maintainability, performance</a>).
 
@@ -226,12 +226,12 @@ Newcomers may want orientation, this resource aims to provide it.
 
       >>> ⚙️ Parameterisation #parameterisation
         ROLE Modeller + stakeholder
-        It seems an ideal of (environmental) modelling that all model parameters are physically/chemically/biologically interpretable. For such parameters, field and lab measurements can be used to state values for the parameter in the model. This is the "parameterisation" of a model.
+        It seems an ideal of (environmental) process modelling that all model parameters are physically/chemically/biologically interpretable. For such parameters, field and lab measurements can be used to state values for the parameter in the model. This is the "parameterisation" of a model.
 
         Unobservable model parameters and processes ("latent parameters/processes") cannot be determined by measurement.
-        Some of these are (sometimes disrespectfully) referred to as "fudge factors", particularly if they cannot be scientifically interpreted. Their value can be found by, formally or informally, "tuning" them to make the overall model reproduce the desired patterns. The formal way would use <a href=#model-inversion>inverse modelling</a>.
+        Some of these are (sometimes disrespectfully) referred to as "fudge factors", particularly if they cannot be scientifically interpreted. Their value can be found by, formally or informally, "tuning" them to make the overall model reproduce the desired patterns. The formal way would use <a href=#model-inversion>inverse modelling</a>. As a result, the tuned parameters may be physically/biologically implausible, indicating a structural misspecification of the model, which may still yield good predictions with these "effective parameters" (see Details of <a href=#model-inversion>inverse modelling</a>).
 
-        One of the design decisions about model characteristics is particularly pertinent to parameterisation: is the model a repository of knowledge or a "Do one thing and do that well." (DOTADTW) A repository inevitable needs to represent alternative formulations of a process, when the knowledge has not condensed yet (think: different ways to represent water uptake by plants). A DOTADTW "only" needs to work well for the system state under consideration, with no attention to processes further away from the target process. A repository-style model with rarely be fit-able to data; literature/field/lab-derived parameter values (and their uncertainty) are the norm.
+        One of the design decisions about model characteristics is particularly pertinent to parameterisation: is the model a repository of knowledge or rather a "Do one thing and do that well." (DOTADTW) A repository inevitable needs to represent alternative formulations of a process, when the knowledge has not condensed yet (think: different ways to represent water uptake by plants). A DOTADTW "only" needs to work well for the system state under consideration, with no attention to processes further away from the target process. A repository-style model with rarely be fit-able to data; literature/field/lab-derived parameter values (and their uncertainty) are the norm.
 
         General references: <sup class="cite-ref" data-cite="Sun 2015"></sup>
 
@@ -278,20 +278,23 @@ Newcomers may want orientation, this resource aims to provide it.
         After quantifying prediction uncertainty, three follow-up steps may follow: (1) an analysis of the sources of uncertainty ("uncertainty decomposition"), using ANOVA or variable-importance-based approaches. If test/validation data are available: (2) quantification of expected prediction error (based on raw residuals of prediction to test data, e.g. RMSPE); and (3) computation of some measure of prediction quality based on the PDF (log-likelihood, or, if no assumption about the PDF shall be made, by CPRS<sup class="cite-ref" data-cite="Matheson 1976"></sup>). The last step can be extended to compute prediction limits.<sup class="cite-ref" data-cite="Wesselkamp 2025"></sup>
 
         IMPORTANT 🔔 Validation needs to be planned: split data into MANY subsets.
+        
 
       >>> 🛡️ Validation #validation
-        Independent validation is an honest estimate of prediction quality. "Independent" here means in particular that the data used for validation are not correlated with those used for training/parameterising the model.
+        Independent validation is an honest estimate of prediction quality. "Independent" here means in particular that the data used for validation are conditionally independent of those used for training/parameterising the model. (That is: <small>\(P(y_\text{validation} \mid y_\text{training}, X_\text{validation}) =  P(y_\text{validation} \mid X_\text{validation}) \)</small>.)
 
         The most obvious non-independence are due to proximity in space, time or some form of grouping. For example, two adjacent points in an (autocorrelated) time series are not independent, two adjacent (spatially autocorrelated) samples in space are not independent, and neither are two animals sampled from the same group or two species in the same branch of a phylogeny. This means that an independent validation data set must be created such that it samples beyond the range of spatial/temporal/grouping autocorrelation of the raw data.<sup class="cite-ref" data-cite="Roberts 2017"></sup> The most common form of validation, using random assignment of data to different validation folds, is thus often invalid.<sup class="cite-ref" data-cite="Bahn 2013"></sup> <sup class="cite-ref" data-cite="Ploton 2020"></sup>
 
         In a more subtle way, non-independence also arises because modellers learn from each other, lean on common descriptions of a process, develop their model on the basis of a previous one and use the same global patterns as targets for their models. For any given process model, the data used <i>indirectly</i> to derive model formulations and parameters are unknown. This has two implications: (1) model comparisons can not be used to assess the validity of a model, as it is unknown how distant these two models actually are; (2) hindcasting-validation is thrown into doubt, as it is unclear how much of these "data from the past" have already informed the current model version.
 
-        <small>For example, the 2018 drought wave in central Europe exposed an inability of forest growth models to trace the observed dynamics.<sup class="cite-ref" data-cite="XXX"></sup> In response, forest growth modelling groups updapted the process descriptions in their model (pers. comm.). If now the 2018 observations can be approximated by hindcasting, this is <i>not</i> a proper validation, as the data have already been used to inform the model formulation or parameterisation.</small>
+        <small>For example, the 2018 drought wave in central Europe exposed an inability of forest growth models to trace the observed dynamics.<sup class="cite-ref" data-cite="Fischer 2025"></sup> In response, forest growth modelling groups updapted the process descriptions in their model (pers. comm.). If now the 2018 observations can be approximated by hindcasting, this is <i>not</i> a proper validation, as the data have already been used to inform the model formulation or parameterisation.</small>
 
         General references: <sup class="cite-ref" data-cite="Roberts 2017"></sup> <sup class="cite-ref" data-cite="Cerqueira 2020"></sup>
 
-        IMPORTANT 🔔 Validation needs to be planned: split data into MANY subsets.
+        IMPORTANT 🔔 Validation needs to be planned: split data into MANY subsets. 🔔  A model's credibility is boosted when an independent research group validates it.
         LINK long-term-planning
+
+        IMPORTANT 🔔  A model's credibility is boosted when independent research group validate it.
 
       >>> 📝 Documentation of model: code, development, unit testing, validation, usage #documentation-model
         Documentation serves transparency of the science and use of the model. LLMs may be usefully employed to support documentation (particularly of code and use). In some fields, documentation standards exist (e.g. ODD<sup class="cite-ref" data-cite="Grimm 2010"></sup>; TRACE<sup class="cite-ref" data-cite="Schmolke 2010"></sup>).
@@ -461,8 +464,7 @@ Newcomers may want orientation, this resource aims to provide it.
 
       <hr>
       <p id="footnote-unbiased-averages"><sup>a</sup>This presumes that model predictions either scatter around the correct value or that one model over- and the other underestimate, such that on average their predictions are unbiased. Since the truth is unknown, this is and will remain a very strong assumption. Maybe not rely on it too much.</p> 
-
-
+<!---     
       >>> 🔔 Validation needs to be planned: split data into MANY subsets | JUMP validation
       >>> 🔔 Upscale of microlevel processes | JUMP specify-model
       >>> 🔔 Always use several models for structural uncertainty | JUMP uncertainty-decomp
@@ -470,23 +472,46 @@ Newcomers may want orientation, this resource aims to provide it.
       >>> 🔔 Uncertainty quantification is mandatory | JUMP best-answer
       >>> 🔔 Co-interpretation of results and their uncertainty: PDF, also on maps | JUMP communication
       >>> 🔔 How to establish a moderated discussion to resolve or highlight differences?
+-->
+
+
+
+## Attention required #attention
+
+      >>> 🔔 Principles for process model simplification
+
+      As mentioned in bones of contention above, process models tend to become more and more complex during development. How to counteract this trend? What are the principles by which parsimony can be introduced to identify model elements that should be deleted?
+
+      >>> 🔔  A concept of which uncertainty sources can be ignored for which prediction purpose
+      
+      The known unknown probability of a global ebola outbreak may contribute to a dystopian (but possible) scenario of the future, but it does not absolve us from including parameter uncertainty for short-term management advice in a “business as usual” scenario. In contrast, parameter uncertainty may be ignored when comparing predictions from many different models (under the assumptions that model structures introduce more uncertainty than parameters). A rigorous concept of when it is permissible to omit uncertainty estimates for one or the other source of uncertainty is missing.
+
+      >>> 🔔   Reports on stakeholder experience, particularly outside scientific publications, in order to help others to improve the science-decision interface
+
+      >>> 🔔  Develop advice on which model types are suitable for what kind of prediction
+
+      >>> 🔔  Develop a data platform that makes training and separately validation data available for many sites across the world, thereby facilitating model input harmonisation and model comparison
+
+
 
 ## GLOSSARY
 model | A flexible thing: can be a set of expert statements, a process model, or a deep-learning analysis.
-prediction | A quantitative statement of a model; includes forecasts and projections.
+prediction | A quantitative statement of a model, including uncertainty; comprises forecasts and projections.
 calibration | Fitting model parameters to observed data; equivalent to inverse modelling. Distinct from validation.
-validation | An honest, pre-planned test of predictive quality on data not used in calibration.
-SA | Sensitivity Analysis — identifies which parameters most strongly influence the target output.
-ABM | Agent-Based Model — simulates individual entities and their interactions to produce system-level patterns.
-ODE | Ordinary Differential Equation — describes continuous-time dynamics of system state variables.
-MSY | Maximum Sustainable Yield — the largest catch that can be taken from a stock indefinitely.
-PDF | Probability Density Function — the full distribution of a predicted quantity, encoding uncertainty.
-MCMC | Markov Chain Monte Carlo — samples posterior parameter distributions in Bayesian calibration.
-ABC | Approximate Bayesian Computation — likelihood-free inference for complex simulators.
-POM | Pattern-Oriented Modelling — calibration using multiple observed patterns simultaneously.
-structural uncertainty | Uncertainty from not knowing the correct model structure; addressed by using multiple model types.
+forecasting | A prediction into the near future, typically with quantified uncertainties.
+parameter | A numerical value determining a model's behaviour, which is not part of the model input (unlike variables).
+projection  | A prediction on the basis of a scenario; since scenarios have no probability, also the projection is merely the exploration of a what-if, not a probability statement.
 scenario planning | Generating predictions under a range of plausible future conditions to explore assumption sensitivity.
-
+structural uncertainty | Uncertainty from not knowing the correct model structure; addressed by using multiple model types.
+validation | An honest, pre-planned test of predictive quality on data not used in calibration.
+ABC | Approximate Bayesian Computation — likelihood-free inference for complex simulators.
+ABM | Agent-Based Model — simulates individual entities and their interactions to produce system-level patterns.
+MCMC | Markov Chain Monte Carlo — samples posterior parameter distributions in Bayesian calibration.
+MSY | Maximum Sustainable Yield — the largest catch that can be taken from a stock indefinitely.
+ODE | Ordinary Differential Equation — describes continuous-time dynamics of system state variables.
+PDF | Probability Density Function — the full distribution of a predicted quantity, encoding uncertainty.
+POM | Pattern-Oriented Modelling — calibration using multiple observed patterns simultaneously.
+SA | Sensitivity Analysis — identifies which parameters most strongly influence the target output.
 
 </script>
 

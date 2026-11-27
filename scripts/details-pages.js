@@ -23,9 +23,16 @@ function hidePlaceholderDetailButtons(){
 function handleDetailOverlayEscape(e){
   if(e.key!=='Escape') return;
   var dialog=document.getElementById('detail-overlay');
-  if(!dialog||!dialog.open) return;
-  e.preventDefault();
-  closeDetailOverlay();
+  if(dialog&&dialog.open){
+    e.preventDefault();
+    closeDetailOverlay();
+    return;
+  }
+  var citationDialog=document.getElementById('citation-overlay');
+  if(citationDialog&&citationDialog.open){
+    e.preventDefault();
+    closeCitationOverlay();
+  }
 }
 
 function bindDetailOverlayLinks(container){
@@ -91,6 +98,21 @@ function closeDetailOverlay(){
   document.body.classList.remove('detail-overlay-open');
 }
 
+function openCitationOverlay(){
+  var dialog=document.getElementById('citation-overlay');
+  if(!dialog) return;
+  document.body.classList.add('detail-overlay-open');
+  if(typeof dialog.showModal==='function') dialog.showModal();
+  else dialog.setAttribute('open','open');
+}
+
+function closeCitationOverlay(){
+  var dialog=document.getElementById('citation-overlay');
+  if(dialog&&dialog.open) dialog.close();
+  else if(dialog) dialog.removeAttribute('open');
+  document.body.classList.remove('detail-overlay-open');
+}
+
 document.addEventListener('keydown',handleDetailOverlayEscape);
 
 document.addEventListener('DOMContentLoaded',function(){
@@ -109,6 +131,19 @@ document.addEventListener('DOMContentLoaded',function(){
     dialog.addEventListener('cancel',function(e){
       e.preventDefault();
       closeDetailOverlay();
+    });
+  }
+  var citationDialog=document.getElementById('citation-overlay');
+  if(citationDialog){
+    citationDialog.addEventListener('click',function(e){
+      if(e.target===citationDialog) closeCitationOverlay();
+    });
+    citationDialog.addEventListener('close',function(){
+      document.body.classList.remove('detail-overlay-open');
+    });
+    citationDialog.addEventListener('cancel',function(e){
+      e.preventDefault();
+      closeCitationOverlay();
     });
   }
   document.addEventListener('basis-rendered',function(){

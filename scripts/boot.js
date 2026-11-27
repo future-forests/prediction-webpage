@@ -40,6 +40,10 @@ function renderAll(raw){
   if(highlightOut) highlightOut.innerHTML=renderBones(data.bones);
   appendSectionDetails(sectionIds['BONES OF CONTENTION'],'Bones of Contention',document.getElementById('s-bones'),document.getElementById('bones'));
 
+  var attentionOut=document.getElementById('attention-out');
+  if(attentionOut) attentionOut.innerHTML=renderAttention(data.attention);
+  appendSectionDetails(sectionIds['ATTENTION REQUIRED'],'Attention required!',document.getElementById('s-attention'),document.getElementById('attention'));
+
   if(window.CitationTools){
     window.CitationTools.hydrate({
       biblioGlobal:'BASIS_BIBLIO',
@@ -53,13 +57,14 @@ function renderAll(raw){
   autoDefine(main,data.glossary);
   autoDefine(document.getElementById('intro-body'),data.glossary);
   autoDefine(highlightOut,data.glossary);
+  autoDefine(attentionOut,data.glossary);
   enableTapTooltips();
 
   buildSidebar(data.phases);
   collectConnectors(data.phases);
   initConnectorObserver(main);
   drawConnectors();
-  typesetMath([main, document.getElementById('intro-body'), highlightOut]).then(drawConnectors);
+  typesetMath([main, document.getElementById('intro-body'), highlightOut, attentionOut]).then(drawConnectors);
   document.dispatchEvent(new Event('basis-rendered'));
   if(window.location.hash) navigateToInPageTarget(window.location.hash);
 }
@@ -212,7 +217,7 @@ function setAllSectionsExpanded(expanded){
   var secTitles=document.querySelectorAll('.sec-title:not(.no-toggle)');
   for(var m=0;m<secTitles.length;m++) secTitles[m].classList.toggle('collapsed',!expanded);
 
-  var sections=document.querySelectorAll('#s-bones, #s-glossary, #s-references');
+  var sections=document.querySelectorAll('#s-bones, #s-attention, #s-glossary, #s-references');
   for(var n=0;n<sections.length;n++){
     sections[n].classList.toggle('sec-collapsed',!expanded);
     setFindHidden(sections[n],!expanded);

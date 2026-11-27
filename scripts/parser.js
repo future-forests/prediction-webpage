@@ -12,7 +12,7 @@ function parseContent(raw) {
     raw=el?el.textContent:'';
   }
   var lines=raw.split('\n');
-  var result={ intro:[], sectionIds:{}, glossary:[], bones:[], phases:[], outlineById:{} };
+  var result={ intro:[], sectionIds:{}, glossary:[], bones:[], attention:[], phases:[], outlineById:{} };
   var section=null, curPhase=null, curNode=null, curSub=null, curField=null;
 
   function flush(){ curField=null; }
@@ -38,7 +38,15 @@ function parseContent(raw) {
     return { icon:'', namePart:sRaw };
   }
 
-  function isBonesSection(name){ return name==='BONES OF CONTENTION'; }
+  function sectionList(name){
+    if(name==='BONES OF CONTENTION'){
+      return { items:result.bones, field:'bones-desc', fallbackId:'bone' };
+    }
+    if(name==='ATTENTION REQUIRED'){
+      return { items:result.attention, field:'attention-desc', fallbackId:'attention' };
+    }
+    return null;
+  }
 
   var FIELD_KEYS={
     rationale:'rationale',
@@ -47,7 +55,8 @@ function parseContent(raw) {
     example:'example',
     important:'important',
     'sub-desc':'desc',
-    'bones-desc':'desc'
+    'bones-desc':'desc',
+    'attention-desc':'desc'
   };
 
   function fieldTarget(){
@@ -55,24 +64,27 @@ function parseContent(raw) {
     if(curField==='text'||curField==='text-after'||curField==='example'||curField==='important') return curNode;
     if(curField==='sub-desc') return curSub;
     if(curField==='bones-desc'&&result.bones.length) return result.bones[result.bones.length-1];
+    if(curField==='attention-desc'&&result.attention.length) return result.attention[result.attention.length-1];
     return null;
   }
 
-  function parseBonesJump(pipeTail){
+  function parseSectionJump(pipeTail){
     var m=pipeTail&&trimVal(pipeTail).match(/JUMP\s+(\S+)/);
     return m?m[1]:null;
   }
 
-  function pushBonesItem(namePart, pipeTail){
-    var itemMeta=splitDefinedId(namePart);
-    var itemId=itemMeta.id||('bone-'+(result.bones.length+1));
-    result.bones.push({
+  function pushSectionItem(list, rawName, pipeTail){
+    var subParts=parseSubItemRaw(trimVal(rawName));
+    var itemMeta=splitDefinedId(subParts.namePart);
+    var itemId=itemMeta.id||(list.fallbackId+'-'+(list.items.length+1));
+    list.items.push({
       id:itemId,
-      icon:'',
+      icon:subParts.icon,
       name:itemMeta.label,
       desc:'',
-      jump:parseBonesJump(pipeTail)
+      jump:parseSectionJump(pipeTail)
     });
+    curField=list.field;
   }
 
   function appendToCurrentField(line){
@@ -133,21 +145,11 @@ function parseContent(raw) {
       continue;
     }
     if(line.indexOf('>>> ')===0){
-      if(isBonesSection(section)){
+      var list=sectionList(section);
+      if(list){
         flush();
         var cp=trimVal(line.slice(4)).split('|');
-        var subParts=parseSubItemRaw(trimVal(cp[0]));
-        var itemMeta=splitDefinedId(subParts.namePart);
-        var lm=cp[1]&&trimVal(cp[1]).match(/JUMP\s+(\S+)/);
-        var itemId=itemMeta.id||('bone-'+(result.bones.length+1));
-        result.bones.push({
-          id:itemId,
-          icon:subParts.icon,
-          name:itemMeta.label,
-          desc:'',
-          jump:lm?lm[1]:null
-        });
-        curField='bones-desc';
+        pushSectionItem(list,cp[0],cp[1]);
         continue;
       }
       flush();
@@ -195,7 +197,9 @@ function parseContent(raw) {
       continue;
     }
     if((line.indexOf('IMPORTANT ')===0||line==='IMPORTANT')&&curNode){
-      curNode.important=line==='IMPORTANT'?'':'<strong>'+trimVal(line.slice(10))+'</strong>';
+      var importantText=line==='IMPORTANT'?'':'<strong>'+trimVal(line.slice(10))+'</strong>';
+      if(curNode.important&&importantText) curNode.important+='\n\n'+importantText;
+      else if(importantText||!curNode.important) curNode.important=importantText;
       curField='important';
       continue;
     }
@@ -216,15 +220,16 @@ function parseContent(raw) {
       if(gp.length>=2) result.glossary.push({term:trimVal(gp[0]),def:trimVal(gp[1])});
       continue;
     }
-    if(isBonesSection(section)){
+    var activeList=sectionList(section);
+    if(activeList){
       if(line.indexOf('|')>-1){
         flush();
         var cp=line.split('|');
-        pushBonesItem(trimVal(cp[0]),cp[1]);
-      }else if(curField==='bones-desc'&&appendToCurrentField(line)){
+        pushSectionItem(activeList,cp[0],cp[1]);
+      }else if(curField===activeList.field&&appendToCurrentField(line)){
         /* appended to desc */
-      }else if(result.bones.length){
-        result.bones[result.bones.length-1].name+=' '+line;
+      }else if(activeList.items.length){
+        activeList.items[activeList.items.length-1].name+=' '+line;
       }
       continue;
     }

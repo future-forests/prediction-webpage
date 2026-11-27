@@ -141,3 +141,14 @@ function renderBones(items){
   }
   return html+'</ul>';
 }
+
+function renderAttention(items){
+  if(!items||!items.length) return '';
+  var html='<ul class="sub-list attention-list">';
+  for(var i=0;i<items.length;i++){
+    var s=items[i];
+    var jump=s.jump?' <a href="#'+escapeAttr(s.jump)+'" class="attention-jump">&rarr;</a>':'';
+    html+='<li>'+renderCollapsibleSubItem(s,{ fallbackPrefix:'attention', index:i, jumpHtml:jump })+'</li>';
+  }
+  return html+'</ul>';
+}
